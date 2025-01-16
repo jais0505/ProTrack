@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:protrack_admin/screens/dashboard.dart';
 
 class AdminLogin extends StatefulWidget {
   const AdminLogin({super.key});
@@ -27,7 +28,7 @@ class _AdminLoginState extends State<AdminLogin> {
                   Padding(
                     padding: const EdgeInsets.all(15),
                     child: Image.asset(
-                      'assets/Logo.png',
+                      'assets/Logo1.png',
                       width: 40,
                       height: 40,
                     ),
@@ -116,7 +117,14 @@ class _AdminLoginState extends State<AdminLogin> {
                                   horizontal: 100, vertical: 18),
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(5))),
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const AdminHome(),
+                              ),
+                            );
+                          },
                           child: Text(
                             'Login',
                             style: TextStyle(color: Colors.white),
