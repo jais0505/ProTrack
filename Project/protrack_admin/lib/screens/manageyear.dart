@@ -20,6 +20,17 @@ class _YearScreenState extends State<YearScreen>
       await supabase.from('tbl_year').insert({
         'year_name': year,
       });
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'Year Added',
+            style: TextStyle(color: Colors.white),
+          ),
+          backgroundColor: Colors.green,
+        ),
+      );
+      print("Inserted");
+      yearController.clear();
     } catch (e) {
       print("ERROR ADDING YEAR: $e");
     }
