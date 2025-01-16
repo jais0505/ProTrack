@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:protrack_admin/components/appbar.dart';
 import 'package:protrack_admin/components/sidebar.dart';
-import 'package:protrack_admin/screens/managestudents.dart';
+import 'package:protrack_admin/screens/managefiletype.dart';
+import 'package:protrack_admin/screens/manageproject.dart';
+import 'package:protrack_admin/screens/managetechnology.dart';
+import 'package:protrack_admin/screens/manageyear.dart';
+import 'package:protrack_admin/screens/viewstudents.dart';
 import 'package:protrack_admin/screens/manageteachers.dart';
 
 class AdminHome extends StatefulWidget {
@@ -14,7 +18,14 @@ class AdminHome extends StatefulWidget {
 class _AdminHomeState extends State<AdminHome> {
   int _selectedIndex = 0;
 
-  final List<Widget> _pages = [StudentsScreen(), TeacherScreen()];
+  final List<Widget> _pages = [
+    StudentsScreen(),
+    TeacherScreen(),
+    YearScreen(),
+    TechnologyScreen(),
+    FileType(),
+    ProjectScreen(),
+  ];
 
   void onSidebarItemTapped(int index) {
     setState(() {
@@ -25,7 +36,7 @@ class _AdminHomeState extends State<AdminHome> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Color(0xFFFFFFFF),
+        backgroundColor: Color(0xFFEDF0F6),
         body: Row(
           children: [
             Expanded(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:protrack_admin/screens/login.dart';
 
 class SideBar extends StatefulWidget {
   final Function(int) onItemSelected;
@@ -9,10 +10,21 @@ class SideBar extends StatefulWidget {
 }
 
 class _SideBarState extends State<SideBar> {
-  final List<String> pages = ["Manage Students", "Manage Teachers"];
+  final List<String> pages = [
+    "View Students",
+    "Manage Teachers",
+    "Manage Year",
+    "Manage Technology",
+    "Manage File Type",
+    "Manage Project",
+  ];
   final List<IconData> icons = [
     Icons.school,
-    Icons.local_fire_department // Icon for "Profile"
+    Icons.person_3_outlined,
+    Icons.date_range,
+    Icons.terminal,
+    Icons.file_copy,
+    Icons.computer // Icon for "Profile"
     // Icon for "Manage Faculty"
   ];
 
@@ -63,7 +75,10 @@ class _SideBarState extends State<SideBar> {
                 style: TextStyle(color: Colors.white, fontSize: 14),
               ),
               onTap: () {
-                Navigator.pushNamed(context, '/login');
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => AdminLogin()),
+                );
               },
             ),
           ),

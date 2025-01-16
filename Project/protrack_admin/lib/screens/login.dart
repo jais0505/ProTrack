@@ -9,18 +9,18 @@ class AdminLogin extends StatefulWidget {
 }
 
 class _AdminLoginState extends State<AdminLogin> {
+  bool passkey = true;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration:
-            BoxDecoration(color: const Color.fromARGB(255, 242, 241, 241)),
+        decoration: BoxDecoration(color: Color(0xFFEDF0F6)),
         child: Form(
             child: Center(
           child: Column(
             children: [
               SizedBox(
-                height: 50,
+                height: 25,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -47,11 +47,11 @@ class _AdminLoginState extends State<AdminLogin> {
                 height: 20,
               ),
               Container(
-                width: 300,
+                width: 310,
                 height: 400,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(5),
-                  color: const Color.fromARGB(196, 255, 255, 255),
+                  borderRadius: BorderRadius.circular(7),
+                  color: Color(0xFFFFFFFF),
                 ),
                 child: Column(
                   children: [
@@ -71,38 +71,55 @@ class _AdminLoginState extends State<AdminLogin> {
                     ),
                     Padding(
                       padding: const EdgeInsets.all(20.0),
-                      child: TextFormField(
-                        decoration: InputDecoration(
-                            hintStyle: TextStyle(fontSize: 12),
-                            hintText: 'Email',
-                            border: UnderlineInputBorder(),
-                            prefixIcon: Icon(Icons.email)),
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 22, right: 22),
+                        child: TextFormField(
+                          decoration: InputDecoration(
+                              labelText: "Email",
+                              labelStyle: TextStyle(fontSize: 12),
+                              hintStyle: TextStyle(fontSize: 11),
+                              hintText: 'Enter your email',
+                              border: UnderlineInputBorder(),
+                              prefixIcon: Icon(Icons.email)),
+                        ),
                       ),
                     ),
                     Padding(
                       padding: const EdgeInsets.all(20.0),
-                      child: TextFormField(
-                        decoration: InputDecoration(
-                            hintStyle: TextStyle(fontSize: 12),
-                            hintText: 'Password',
-                            border: UnderlineInputBorder(),
-                            prefixIcon: Icon(Icons.password),
-                            suffixIcon: IconButton(
-                              icon: Icon(Icons.visibility),
-                              onPressed: () {},
-                            )),
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 22, right: 22),
+                        child: TextFormField(
+                          decoration: InputDecoration(
+                              labelText: 'Password',
+                              labelStyle: TextStyle(fontSize: 12),
+                              hintStyle: TextStyle(fontSize: 11),
+                              hintText: 'Enter your password',
+                              border: UnderlineInputBorder(),
+                              prefixIcon: Icon(Icons.password),
+                              suffixIcon: IconButton(
+                                icon: Icon(passkey
+                                    ? Icons.visibility_off
+                                    : Icons.visibility),
+                                onPressed: () {
+                                  setState(() {
+                                    passkey = !passkey;
+                                  });
+                                },
+                              )),
+                          obscureText: passkey,
+                        ),
                       ),
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         Padding(
-                          padding: const EdgeInsets.all(15.0),
+                          padding: const EdgeInsets.only(
+                              right: 39, top: 10, bottom: 10),
                           child: Text(
-                            'forgot password?',
+                            'Forgot password?',
                             style: TextStyle(
-                              color: const Color.fromARGB(255, 27, 150, 250),
-                            ),
+                                color: Color(0xFF017AFF), fontSize: 12),
                           ),
                         ),
                       ],
@@ -111,10 +128,9 @@ class _AdminLoginState extends State<AdminLogin> {
                       padding: const EdgeInsets.all(10.0),
                       child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                              backgroundColor:
-                                  const Color.fromARGB(255, 64, 146, 214),
+                              backgroundColor: Color(0xFF017AFF),
                               padding: EdgeInsets.symmetric(
-                                  horizontal: 100, vertical: 18),
+                                  horizontal: 96, vertical: 18),
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(5))),
                           onPressed: () {
