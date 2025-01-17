@@ -23,7 +23,7 @@ class _AdminHomeState extends State<AdminHome> {
     TeacherScreen(),
     YearScreen(),
     TechnologyScreen(),
-    FileType(),
+    FileTypeScreen(),
     ProjectScreen(),
   ];
 

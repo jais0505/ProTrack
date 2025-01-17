@@ -13,6 +13,13 @@ class _YearScreenState extends State<YearScreen>
   bool _isFormVisible = false;
   final Duration _animationDuration = const Duration(milliseconds: 300);
   final TextEditingController yearController = TextEditingController();
+  List<Map<String, dynamic>> _year = [];
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    fetchYear();
+  }
 
   Future<void> yearSubmit() async {
     try {
@@ -30,9 +37,21 @@ class _YearScreenState extends State<YearScreen>
         ),
       );
       print("Inserted");
+      print("The year data:$year");
       yearController.clear();
     } catch (e) {
       print("ERROR ADDING YEAR: $e");
+    }
+  }
+
+  Future<void> fetchYear() async {
+    try {
+      final response = await supabase.from('tbl_year').select();
+      setState(() {
+        _year = response;
+      });
+    } catch (e) {
+      print("Error selecting yaer:$e");
     }
   }
 
@@ -47,13 +66,25 @@ class _YearScreenState extends State<YearScreen>
             children: [
               Text('Manage Year'),
               ElevatedButton.icon(
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: Color(0xFF161616),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5)),
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 25, vertical: 18)),
                 onPressed: () {
                   setState(() {
                     _isFormVisible = !_isFormVisible;
                   });
                 },
-                label: Text(_isFormVisible ? "Cancel" : "Add Year"),
-                icon: Icon(_isFormVisible ? Icons.cancel : Icons.add),
+                label: Text(
+                  _isFormVisible ? "Cancel" : "Add Year",
+                  style: TextStyle(color: Colors.white),
+                ),
+                icon: Icon(
+                  _isFormVisible ? Icons.cancel : Icons.add,
+                  color: Colors.white,
+                ),
               )
             ],
           ),
@@ -77,12 +108,16 @@ class _YearScreenState extends State<YearScreen>
                       child: Column(
                         children: [
                           Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: Text("Year Form"),
+                            padding: const EdgeInsets.only(top: 20, bottom: 6),
+                            child: Text(
+                              "Year Form",
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.bold),
+                            ),
                           ),
                           Padding(
                             padding: const EdgeInsets.only(
-                                left: 40, right: 40, top: 30, bottom: 20),
+                                left: 40, right: 40, top: 20, bottom: 20),
                             child: TextFormField(
                               controller: yearController,
                               decoration: InputDecoration(
@@ -109,20 +144,29 @@ class _YearScreenState extends State<YearScreen>
                                   'Add',
                                   style: TextStyle(color: Colors.white),
                                 )),
-                          )
+                          ),
                         ],
                       ),
                     ),
                   )
                 : Container(),
           ),
-          SingleChildScrollView(
-            child: Container(
-              child: Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Text("Year Data"),
-                ),
+          Container(
+            child: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Column(
+                children: [
+                  Text("Year Data"),
+                  ListView.builder(
+                      itemCount: _year.length,
+                      shrinkWrap: true,
+                      itemBuilder: (context, index) {
+                        final yeardata = _year[index];
+                        return ListTile(
+                          title: Text(yeardata['year_name']),
+                        );
+                      })
+                ],
               ),
             ),
           ),
