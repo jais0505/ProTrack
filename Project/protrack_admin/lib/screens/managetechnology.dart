@@ -14,13 +14,15 @@ class _TechnologyScreenState extends State<TechnologyScreen>
   final Duration _animationDuration = const Duration(milliseconds: 300);
   final TextEditingController technologyController = TextEditingController();
   List<Map<String, dynamic>> _technologyList = [];
+  int _editId = 0;
 
-  Future<void> yearSubmit() async {
+  Future<void> insertTechnology() async {
     try {
       String technology = technologyController.text;
       await supabase.from('tbl_technology').insert({
         'technology_name': technology,
       });
+      fetchTechnology();
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text(
@@ -48,12 +50,45 @@ class _TechnologyScreenState extends State<TechnologyScreen>
     }
   }
 
-  Future<void> deletetechnology() async {
+  Future<void> deletetechnology(int techId) async {
     try {
-      //await supabase.from('tbl_technology').delete().eq('id',noteid[]);
+      await supabase.from('tbl_technology').delete().eq('id', techId);
       fetchTechnology();
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'Technology deleted',
+            style: TextStyle(color: Colors.white),
+          ),
+          backgroundColor: Colors.green,
+        ),
+      );
+      print("Technology deleted");
     } catch (e) {
       print("ERROR DELETING:$e");
+    }
+  }
+
+  Future<void> updateTechnology() async {
+    try {
+      await supabase.from('tbl_technology').update(
+          {'technology_name': technologyController.text}).eq('id', _editId);
+      fetchTechnology();
+      technologyController.clear();
+      _editId = 0;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'Technology Updated',
+            style: TextStyle(color: Colors.white),
+          ),
+          backgroundColor: Colors.green,
+        ),
+      );
+      print("Technology updated");
+      fetchTechnology();
+    } catch (e) {
+      print("ERROR UPDATING TECHNOLOGY:$e");
     }
   }
 
@@ -147,7 +182,12 @@ class _TechnologyScreenState extends State<TechnologyScreen>
                                         borderRadius:
                                             BorderRadius.circular(5))),
                                 onPressed: () {
-                                  yearSubmit();
+                                  if (_editId != 0) {
+                                    updateTechnology();
+                                    _isFormVisible = false;
+                                  } else {
+                                    insertTechnology();
+                                  }
                                 },
                                 child: Text(
                                   'Add',
@@ -168,6 +208,7 @@ class _TechnologyScreenState extends State<TechnologyScreen>
             columns: [
               DataColumn(label: Text("Sl.No")),
               DataColumn(label: Text("Technology")),
+              DataColumn(label: Text("Edit")),
               DataColumn(label: Text("Delete")),
             ],
             rows: _technologyList.asMap().entries.map((entry) {
@@ -175,10 +216,23 @@ class _TechnologyScreenState extends State<TechnologyScreen>
               return DataRow(cells: [
                 DataCell(Text((entry.key + 1).toString())),
                 DataCell(Text(entry.value['technology_name'])),
+                DataCell(IconButton(
+                    onPressed: () {
+                      setState(() {
+                        _editId = entry.value['id'];
+                        technologyController.text =
+                            entry.value['technology_name'];
+                        _isFormVisible = true;
+                      });
+                    },
+                    icon: Icon(
+                      Icons.edit,
+                      color: Colors.green,
+                    ))),
                 DataCell(
                   IconButton(
                     onPressed: () {
-                      //deletetechnology(tech['id']);
+                      deletetechnology(entry.value['id']);
                     },
                     icon: const Icon(Icons.delete, color: Colors.red),
                   ),

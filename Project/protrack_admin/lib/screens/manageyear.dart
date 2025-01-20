@@ -55,6 +55,14 @@ class _YearScreenState extends State<YearScreen>
     }
   }
 
+  Future<void> deleteyear(int yearId) async {
+    try {
+      await supabase.from('tbl_year').delete().eq('id', yearId);
+    } catch (e) {
+      print("ERROR DELETING YEAR:$e");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(

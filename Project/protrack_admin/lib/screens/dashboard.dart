@@ -43,7 +43,7 @@ class _AdminHomeState extends State<AdminHome> {
                 flex: 1, child: SideBar(onItemSelected: onSidebarItemTapped)),
             Expanded(
               flex: 5,
-              child: Column(
+              child: ListView(
                 children: [
                   Appbar1(),
                   _pages[_selectedIndex],
