@@ -187,6 +187,7 @@ class _TechnologyScreenState extends State<TechnologyScreen>
                                     _isFormVisible = false;
                                   } else {
                                     insertTechnology();
+                                    _isFormVisible = false;
                                   }
                                 },
                                 child: Text(
@@ -199,6 +200,9 @@ class _TechnologyScreenState extends State<TechnologyScreen>
                     ),
                   )
                 : Container(),
+          ),
+          SizedBox(
+            height: 30,
           ),
           Text(
             "Technologies",

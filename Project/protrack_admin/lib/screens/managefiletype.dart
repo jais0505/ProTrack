@@ -14,13 +14,15 @@ class _FileTypeScreenState extends State<FileTypeScreen>
   final Duration _animationDuration = const Duration(milliseconds: 300);
   final TextEditingController filetypeController = TextEditingController();
   List<Map<String, dynamic>> _filetypeList = [];
+  int _editId = 0;
 
-  Future<void> yearSubmit() async {
+  Future<void> insertFiletype() async {
     try {
       String filetype = filetypeController.text;
       await supabase.from('tbl_filetype').insert({
         'filetype_name': filetype,
       });
+      fetchFiletype();
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text(
@@ -45,6 +47,44 @@ class _FileTypeScreenState extends State<FileTypeScreen>
       });
     } catch (e) {
       print("ERROR FETCHING FILE TYPE DATA: $e");
+    }
+  }
+
+  Future<void> deleteFiletype(int filetypeId) async {
+    try {
+      await supabase.from('tbl_filetype').delete().eq('id', filetypeId);
+      fetchFiletype();
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text(
+          "File type Deleted",
+          style: TextStyle(color: Colors.white),
+        ),
+        backgroundColor: Colors.green,
+      ));
+      print("File type deleted");
+    } catch (e) {
+      print("ERROR DELETING FILETYPE:$e");
+    }
+  }
+
+  Future<void> updateFiletype() async {
+    try {
+      await supabase
+          .from('tbl_filetype')
+          .update({'filetype_name': filetypeController.text}).eq('id', _editId);
+      fetchFiletype();
+      filetypeController.clear;
+      _editId = 0;
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text(
+          "File type Updated",
+          style: TextStyle(color: Colors.white),
+        ),
+        backgroundColor: Colors.green,
+      ));
+      fetchFiletype();
+    } catch (e) {
+      print("ERROR UPDATING FILETYPE:$e");
     }
   }
 
@@ -138,7 +178,13 @@ class _FileTypeScreenState extends State<FileTypeScreen>
                                         borderRadius:
                                             BorderRadius.circular(5))),
                                 onPressed: () {
-                                  yearSubmit();
+                                  if (_editId != 0) {
+                                    updateFiletype();
+                                    _isFormVisible = false;
+                                  } else {
+                                    insertFiletype();
+                                    _isFormVisible = false;
+                                  }
                                 },
                                 child: Text(
                                   'Add',
@@ -159,6 +205,7 @@ class _FileTypeScreenState extends State<FileTypeScreen>
             columns: [
               DataColumn(label: Text("Sl.No")),
               DataColumn(label: Text("File type")),
+              DataColumn(label: Text("Edit")),
               DataColumn(label: Text("Delete")),
             ],
             rows: _filetypeList.asMap().entries.map((entry) {
@@ -166,9 +213,23 @@ class _FileTypeScreenState extends State<FileTypeScreen>
               return DataRow(cells: [
                 DataCell(Text((entry.key + 1).toString())),
                 DataCell(Text(entry.value['filetype_name'])),
+                DataCell(IconButton(
+                    onPressed: () {
+                      setState(() {
+                        _editId = entry.value['id'];
+                        filetypeController.text = entry.value['filetype_name'];
+                        _isFormVisible = true;
+                      });
+                    },
+                    icon: Icon(
+                      Icons.edit,
+                      color: Colors.green,
+                    ))),
                 DataCell(
                   IconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      deleteFiletype(entry.value['id']);
+                    },
                     icon: Icon(
                       Icons.delete,
                       color: Colors.red,
