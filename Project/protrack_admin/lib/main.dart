@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:protrack_admin/firebase_options.dart';
 import 'package:protrack_admin/screens/login.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   await Supabase.initialize(
     url: 'https://jjgpiuqajneevdvwhmku.supabase.co',
     anonKey:

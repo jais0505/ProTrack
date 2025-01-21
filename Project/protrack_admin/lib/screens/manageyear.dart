@@ -27,6 +27,7 @@ class _YearScreenState extends State<YearScreen>
       await supabase.from('tbl_year').insert({
         'year_name': year,
       });
+      fetchYear();
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text(
