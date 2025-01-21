@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:protrack_student/dashboard.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -87,8 +88,16 @@ class _LoginState extends State<Login> {
                   ),
                   Padding(
                     padding: const EdgeInsets.all(10.0),
-                    child:
-                        ElevatedButton(onPressed: () {}, child: Text('Login')),
+                    child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const Dashboard(),
+                            ),
+                          );
+                        },
+                        child: Text('Login')),
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,

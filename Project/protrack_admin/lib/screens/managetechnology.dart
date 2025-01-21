@@ -165,7 +165,7 @@ class _TechnologyScreenState extends State<TechnologyScreen>
                             child: TextFormField(
                               controller: technologyController,
                               decoration: InputDecoration(
-                                hintText: 'Year',
+                                hintText: 'Enter technology',
                                 border: OutlineInputBorder(),
                                 prefixIcon: Icon(Icons.terminal_outlined),
                               ),

@@ -25,6 +25,7 @@ class _AdminLoginState extends State<AdminLogin> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  SizedBox(height: 100),
                   Padding(
                     padding: const EdgeInsets.all(15),
                     child: Image.asset(
