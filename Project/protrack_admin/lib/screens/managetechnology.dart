@@ -208,41 +208,78 @@ class _TechnologyScreenState extends State<TechnologyScreen>
             "Technologies",
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
-          DataTable(
-            columns: [
-              DataColumn(label: Text("Sl.No")),
-              DataColumn(label: Text("Technology")),
-              DataColumn(label: Text("Edit")),
-              DataColumn(label: Text("Delete")),
-            ],
-            rows: _technologyList.asMap().entries.map((entry) {
-              print(entry.value);
-              return DataRow(cells: [
-                DataCell(Text((entry.key + 1).toString())),
-                DataCell(Text(entry.value['technology_name'])),
-                DataCell(IconButton(
-                    onPressed: () {
-                      setState(() {
-                        _editId = entry.value['id'];
-                        technologyController.text =
-                            entry.value['technology_name'];
-                        _isFormVisible = true;
-                      });
-                    },
-                    icon: Icon(
-                      Icons.edit,
-                      color: Colors.green,
-                    ))),
-                DataCell(
-                  IconButton(
-                    onPressed: () {
-                      deletetechnology(entry.value['id']);
-                    },
-                    icon: const Icon(Icons.delete, color: Colors.red),
-                  ),
-                ),
-              ]);
-            }).toList(),
+          SizedBox(
+            height: 5,
+          ),
+          Container(
+            decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey, width: 1),
+                borderRadius: BorderRadius.circular(6),
+                color: Color(0xFF161616)),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: DataTable(
+                dividerThickness: 2,
+                dataRowHeight: 50.0,
+                headingRowHeight: 60.0,
+                columns: [
+                  DataColumn(
+                      label: Text("Sl.No",
+                          style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white))),
+                  DataColumn(
+                      label: Text("Technology",
+                          style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white))),
+                  DataColumn(
+                      label: Text("Edit",
+                          style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white))),
+                  DataColumn(
+                      label: Text("Delete",
+                          style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white))),
+                ],
+                rows: _technologyList.asMap().entries.map((entry) {
+                  print(entry.value);
+                  return DataRow(cells: [
+                    DataCell(Text(
+                      (entry.key + 1).toString(),
+                    )),
+                    DataCell(Text(entry.value['technology_name'])),
+                    DataCell(IconButton(
+                        onPressed: () {
+                          setState(() {
+                            _editId = entry.value['id'];
+                            technologyController.text =
+                                entry.value['technology_name'];
+                            _isFormVisible = true;
+                          });
+                        },
+                        icon: Icon(
+                          Icons.edit,
+                          color: Colors.green,
+                        ))),
+                    DataCell(
+                      IconButton(
+                        onPressed: () {
+                          deletetechnology(entry.value['id']);
+                        },
+                        icon: const Icon(Icons.delete, color: Colors.red),
+                      ),
+                    ),
+                  ]);
+                }).toList(),
+              ),
+            ),
           )
         ],
       ),

@@ -144,7 +144,7 @@ class _TeacherScreenState extends State<TeacherScreen>
                 ? Form(
                     child: Container(
                       height: 500,
-                      width: 500,
+                      width: 400,
                       decoration: BoxDecoration(
                           color: Color(0xFFFFFFFF),
                           borderRadius: BorderRadius.circular(5),
@@ -159,7 +159,7 @@ class _TeacherScreenState extends State<TeacherScreen>
                           children: [
                             Padding(
                               padding: const EdgeInsets.only(
-                                top: 30,
+                                top: 20,
                                 bottom: 6,
                               ),
                               child: Text(
@@ -169,8 +169,8 @@ class _TeacherScreenState extends State<TeacherScreen>
                               ),
                             ),
                             Container(
-                              height: 300,
-                              width: 200,
+                              height: 120,
+                              width: 120,
                               child: pickedImage == null
                                   ? GestureDetector(
                                       onTap: handleImageUpload,
@@ -183,7 +183,8 @@ class _TeacherScreenState extends State<TeacherScreen>
                                   : GestureDetector(
                                       onTap: handleImageUpload,
                                       child: ClipRRect(
-                                        borderRadius: BorderRadius.circular(10),
+                                        borderRadius:
+                                            BorderRadius.circular(100),
                                         child: pickedImage!.bytes != null
                                             ? Image.memory(
                                                 Uint8List.fromList(pickedImage!
@@ -200,7 +201,7 @@ class _TeacherScreenState extends State<TeacherScreen>
                             ),
                             Padding(
                               padding: const EdgeInsets.only(
-                                  left: 40, right: 40, top: 30, bottom: 20),
+                                  left: 40, right: 40, top: 10, bottom: 10),
                               child: TextFormField(
                                 controller: _nameController,
                                 decoration: InputDecoration(
@@ -212,7 +213,7 @@ class _TeacherScreenState extends State<TeacherScreen>
                             ),
                             Padding(
                               padding: const EdgeInsets.only(
-                                  left: 40, right: 40, top: 30, bottom: 20),
+                                  left: 40, right: 40, top: 10, bottom: 10),
                               child: TextFormField(
                                 controller: _emailEditingController,
                                 decoration: InputDecoration(
@@ -224,7 +225,7 @@ class _TeacherScreenState extends State<TeacherScreen>
                             ),
                             Padding(
                               padding: const EdgeInsets.only(
-                                  left: 40, right: 40, top: 30, bottom: 20),
+                                  left: 40, right: 40, top: 10, bottom: 10),
                               child: TextFormField(
                                 controller: _contactController,
                                 decoration: InputDecoration(
@@ -237,7 +238,7 @@ class _TeacherScreenState extends State<TeacherScreen>
                             ),
                             Padding(
                               padding: const EdgeInsets.only(
-                                  left: 40, right: 40, top: 30, bottom: 20),
+                                  left: 40, right: 40, top: 10, bottom: 10),
                               child: TextFormField(
                                 controller: _passwordEditingController,
                                 decoration: InputDecoration(
@@ -265,6 +266,9 @@ class _TeacherScreenState extends State<TeacherScreen>
                                     'Add',
                                     style: TextStyle(color: Colors.white),
                                   )),
+                            ),
+                            SizedBox(
+                              height: 10,
                             )
                           ],
                         ),

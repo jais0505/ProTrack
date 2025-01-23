@@ -15,8 +15,22 @@ class _DashboardScreenState extends State<DashboardScreen> {
       body: Column(
         children: [
           AppBar(
-            backgroundColor: Colors.blue,
-            title: Text("Pro Track"),
+            backgroundColor: Colors.white,
+            title: Padding(
+              padding: const EdgeInsets.all(4.0),
+              child: Text(
+                "Pro Track",
+                style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
+              ),
+            ),
+            leading: Padding(
+              padding: const EdgeInsets.only(left: 15, top: 6, bottom: 6),
+              child: Image.asset(
+                'assets/Logo1.png',
+                height: 20,
+                width: 20,
+              ),
+            ),
           ),
           Column(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -31,6 +45,25 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       style: TextStyle(fontSize: 20),
                     ),
                   ),
+                ],
+              ),
+              Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 20, bottom: 10),
+                    child: Image.asset(
+                      'assets/Profile.png',
+                      height: 50,
+                      width: 50,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(14.0),
+                    child: Text(
+                      "Name",
+                      style: TextStyle(fontSize: 18),
+                    ),
+                  )
                 ],
               ),
               Row(
