@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1030071218254",
+    "project_id": "pro-track-da4b9",
+    "storage_bucket": "pro-track-da4b9.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1030071218254:android:ac771918b1bcc5d2b7131f",
+        "android_client_info": {
+          "package_name": "com.example.protrack_admin"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCIz63zduFtyW3EARPn5cF3mhGl-G6VLAU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1030071218254:android:6abdfe4a64fec758b7131f",
+        "android_client_info": {
+          "package_name": "com.example.protrack_teacher"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCIz63zduFtyW3EARPn5cF3mhGl-G6VLAU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
