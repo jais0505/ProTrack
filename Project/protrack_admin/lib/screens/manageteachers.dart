@@ -1,6 +1,10 @@
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:protrack_admin/main.dart';
+import 'package:file_picker/file_picker.dart';
 
 class TeacherScreen extends StatefulWidget {
   const TeacherScreen({super.key});
@@ -12,12 +16,29 @@ class TeacherScreen extends StatefulWidget {
 class _TeacherScreenState extends State<TeacherScreen>
     with SingleTickerProviderStateMixin {
   bool _isFormVisible = false;
+
   final Duration _animationDuration = const Duration(milliseconds: 300);
+
   final TextEditingController _emailEditingController = TextEditingController();
   final TextEditingController _passwordEditingController =
       TextEditingController();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _contactController = TextEditingController();
+
+  PlatformFile? pickedImage;
+
+  // Handle File Upload Process
+  Future<void> handleImageUpload() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      allowMultiple: false, // Only single file upload
+    );
+    if (result != null) {
+      setState(() {
+        pickedImage = result.files.first;
+      });
+    }
+  }
+
   Future<void> register() async {
     try {
       final credential =
@@ -41,23 +62,47 @@ class _TeacherScreenState extends State<TeacherScreen>
       String email = _emailEditingController.text;
       String password = _passwordEditingController.text;
       String contact = _contactController.text;
-      await supabase.from('tbl_teacher').insert({
-        'teacher_name': name,
-        'teacher_email': email,
-        'teacher_contact': contact,
-        'teacher_password': password,
-        'teacher_auth': uid
-      });
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text(
-          "Teacher details added",
-          style: TextStyle(color: Colors.white),
-        ),
-        backgroundColor: Colors.green,
-      ));
-      print("Teacher details inserted");
+      String? url = await photoUpload(uid);
+
+      if (url!.isNotEmpty) {
+        await supabase.from('tbl_teacher').insert({
+          'teacher_name': name,
+          'teacher_email': email,
+          'teacher_contact': contact,
+          'teacher_password': password,
+          'teacher_auth': uid,
+          'teacher_photo': url,
+        });
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text(
+            "Teacher details added",
+            style: TextStyle(color: Colors.white),
+          ),
+          backgroundColor: Colors.green,
+        ));
+      } else {
+        print("Teacher profile not given");
+      }
     } catch (e) {
       print("Error inserting teacher details:$e");
+    }
+  }
+
+  Future<String?> photoUpload(String uid) async {
+    try {
+      final bucketName = 'teacher'; // Replace with your bucket name
+      final filePath = "$uid-${pickedImage!.name}";
+      await supabase.storage.from(bucketName).uploadBinary(
+            filePath,
+            pickedImage!.bytes!, // Use file.bytes for Flutter Web
+          );
+      final publicUrl =
+          supabase.storage.from(bucketName).getPublicUrl(filePath);
+      // await updateImage(uid, publicUrl);
+      return publicUrl;
+    } catch (e) {
+      print("Error photo upload: $e");
+      return null;
     }
   }
 
@@ -122,6 +167,36 @@ class _TeacherScreenState extends State<TeacherScreen>
                                 style: TextStyle(
                                     fontSize: 16, fontWeight: FontWeight.bold),
                               ),
+                            ),
+                            Container(
+                              height: 300,
+                              width: 200,
+                              child: pickedImage == null
+                                  ? GestureDetector(
+                                      onTap: handleImageUpload,
+                                      child: Icon(
+                                        Icons.add_a_photo,
+                                        color: Color(0xFF0277BD),
+                                        size: 50,
+                                      ),
+                                    )
+                                  : GestureDetector(
+                                      onTap: handleImageUpload,
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(10),
+                                        child: pickedImage!.bytes != null
+                                            ? Image.memory(
+                                                Uint8List.fromList(pickedImage!
+                                                    .bytes!), // For web
+                                                fit: BoxFit.cover,
+                                              )
+                                            : Image.file(
+                                                File(pickedImage!
+                                                    .path!), // For mobile/desktop
+                                                fit: BoxFit.cover,
+                                              ),
+                                      ),
+                                    ),
                             ),
                             Padding(
                               padding: const EdgeInsets.only(
