@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:protrack_student/dashboard.dart';
+import 'package:protrack_student/screens/dashboard.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});

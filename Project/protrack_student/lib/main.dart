@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:protrack_student/login.dart';
+import 'package:protrack_student/screens/login.dart';
 
 void main() {
   runApp(const MainApp());

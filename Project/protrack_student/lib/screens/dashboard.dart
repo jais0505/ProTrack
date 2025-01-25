@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:protrack_student/myaccount.dart';
-import 'package:protrack_student/myprojects.dart';
+import 'package:protrack_student/screens/myaccount.dart';
+import 'package:protrack_student/screens/myprojects.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({super.key});
