@@ -28,7 +28,7 @@ class _TeacherScreenState extends State<TeacherScreen>
   PlatformFile? pickedImage;
 
   // Handle File Upload Process
-  Future<void> handleImageUpload() async {
+  Future<void> handleImagePick() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       allowMultiple: false, // Only single file upload
     );
@@ -173,7 +173,7 @@ class _TeacherScreenState extends State<TeacherScreen>
                               width: 120,
                               child: pickedImage == null
                                   ? GestureDetector(
-                                      onTap: handleImageUpload,
+                                      onTap: handleImagePick,
                                       child: Icon(
                                         Icons.add_a_photo,
                                         color: Color(0xFF0277BD),
@@ -181,7 +181,7 @@ class _TeacherScreenState extends State<TeacherScreen>
                                       ),
                                     )
                                   : GestureDetector(
-                                      onTap: handleImageUpload,
+                                      onTap: handleImagePick,
                                       child: ClipRRect(
                                         borderRadius:
                                             BorderRadius.circular(100),

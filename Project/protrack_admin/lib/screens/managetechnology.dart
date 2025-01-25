@@ -215,7 +215,7 @@ class _TechnologyScreenState extends State<TechnologyScreen>
             decoration: BoxDecoration(
                 border: Border.all(color: Colors.grey, width: 1),
                 borderRadius: BorderRadius.circular(6),
-                color: Color(0xFF161616)),
+                color: Colors.white),
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: DataTable(
@@ -226,27 +226,27 @@ class _TechnologyScreenState extends State<TechnologyScreen>
                   DataColumn(
                       label: Text("Sl.No",
                           style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white))),
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ))),
                   DataColumn(
                       label: Text("Technology",
                           style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white))),
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ))),
                   DataColumn(
                       label: Text("Edit",
                           style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white))),
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ))),
                   DataColumn(
                       label: Text("Delete",
                           style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white))),
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ))),
                 ],
                 rows: _technologyList.asMap().entries.map((entry) {
                   print(entry.value);

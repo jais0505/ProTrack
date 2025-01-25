@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:protrack_student/myaccount.dart';
+import 'package:protrack_student/myprojects.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({super.key});
@@ -19,7 +21,7 @@ class _DashboardState extends State<Dashboard> {
         leading: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Image.asset(
-            'assets/Logo.png',
+            'assets/Logo1.png',
             width: 50,
             height: 50,
           ),
@@ -86,24 +88,34 @@ class _DashboardState extends State<Dashboard> {
                     decoration: BoxDecoration(
                         color: Colors.lightBlueAccent,
                         borderRadius: BorderRadius.circular(10)),
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(12.0),
-                          child: Image.asset(
-                            "assets/Profile.png",
-                            width: 70,
-                            height: 70,
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const Account(),
                           ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: Text(
-                            'My account',
-                            style: TextStyle(fontSize: 18),
+                        );
+                      },
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(12.0),
+                            child: Image.asset(
+                              "assets/Profile.png",
+                              width: 70,
+                              height: 70,
+                            ),
                           ),
-                        ),
-                      ],
+                          Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Text(
+                              'My account',
+                              style: TextStyle(fontSize: 18),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -115,21 +127,31 @@ class _DashboardState extends State<Dashboard> {
                     decoration: BoxDecoration(
                         color: Colors.lightBlueAccent,
                         borderRadius: BorderRadius.circular(10)),
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(12.0),
-                          child: Image.asset(
-                            "assets/Myproject.png",
-                            width: 80,
-                            height: 80,
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const ProjectScreen(),
                           ),
-                        ),
-                        Text(
-                          'My Project',
-                          style: TextStyle(fontSize: 18),
-                        )
-                      ],
+                        );
+                      },
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(12.0),
+                            child: Image.asset(
+                              "assets/Myproject.png",
+                              width: 80,
+                              height: 80,
+                            ),
+                          ),
+                          Text(
+                            'My Project',
+                            style: TextStyle(fontSize: 18),
+                          )
+                        ],
+                      ),
                     ),
                   ),
                 ),

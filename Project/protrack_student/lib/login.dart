@@ -1,127 +1,158 @@
 import 'package:flutter/material.dart';
 import 'package:protrack_student/dashboard.dart';
 
-class Login extends StatefulWidget {
-  const Login({super.key});
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
 
   @override
-  State<Login> createState() => _LoginState();
+  State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginState extends State<Login> {
-  final _loginkey = GlobalKey<FormState>();
+class _LoginScreenState extends State<LoginScreen> {
+  bool passkey = true;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.blueGrey,
-      body: Form(
-        key: _loginkey,
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Container(
-              width: 320,
-              height: 500,
-              decoration: BoxDecoration(
-                  border: Border.all(),
-                  borderRadius: BorderRadius.circular(10),
-                  color: Colors.white),
-              child: Column(
+      body: Container(
+        decoration: BoxDecoration(color: Color(0xFFEDF0F6)),
+        child: Form(
+            child: Center(
+          child: Column(
+            children: [
+              SizedBox(
+                height: 170,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SizedBox(
-                    height: 50,
+                  SizedBox(height: 100),
+                  Padding(
+                    padding: const EdgeInsets.all(15),
+                    child: Image.asset(
+                      'assets/Logo1.png',
+                      width: 50,
+                      height: 50,
+                    ),
                   ),
                   Text(
-                    'Login',
-                    style: TextStyle(fontSize: 30),
-                  ),
-                  SizedBox(
-                    height: 25,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: TextFormField(
-                      decoration: InputDecoration(
-                          hintText: 'Email',
-                          border: OutlineInputBorder(),
-                          prefixIcon: Icon(Icons.email)),
+                    'Pro Track',
+                    style: TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
                     ),
                   ),
-                  SizedBox(
-                    height: 15,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: TextFormField(
-                      decoration: InputDecoration(
-                          hintText: 'Password',
-                          border: OutlineInputBorder(),
-                          prefixIcon: Icon(Icons.password),
-                          suffixIcon: IconButton(
-                            icon: Icon(Icons.visibility),
-                            onPressed: () {},
-                          )),
+                ],
+              ),
+              SizedBox(
+                height: 5,
+              ),
+              Container(
+                width: 310,
+                height: 400,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(7),
+                  color: Color(0xFFFFFFFF),
+                ),
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: 20,
                     ),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: Row(
+                    Text(
+                      'Login',
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 22, right: 22),
+                        child: TextFormField(
+                          decoration: InputDecoration(
+                              labelText: "Email",
+                              labelStyle: TextStyle(fontSize: 12),
+                              hintStyle: TextStyle(fontSize: 11),
+                              hintText: 'Enter your email',
+                              border: UnderlineInputBorder(),
+                              prefixIcon: Icon(Icons.email)),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 22, right: 22),
+                        child: TextFormField(
+                          decoration: InputDecoration(
+                              labelText: 'Password',
+                              labelStyle: TextStyle(fontSize: 12),
+                              hintStyle: TextStyle(fontSize: 11),
+                              hintText: 'Enter your password',
+                              border: UnderlineInputBorder(),
+                              prefixIcon: Icon(Icons.password),
+                              suffixIcon: IconButton(
+                                icon: Icon(passkey
+                                    ? Icons.visibility_off
+                                    : Icons.visibility),
+                                onPressed: () {
+                                  setState(() {
+                                    passkey = !passkey;
+                                  });
+                                },
+                              )),
+                          obscureText: passkey,
+                        ),
+                      ),
+                    ),
+                    Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.pushNamed(context, '/signup');
-                          },
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              right: 39, top: 10, bottom: 10),
                           child: Text(
-                            'forgot password?',
+                            'Forgot password?',
                             style: TextStyle(
-                              color: Colors.blue,
-                              fontWeight: FontWeight.bold,
-                            ),
+                                color: Color(0xFF017AFF), fontSize: 12),
                           ),
                         ),
                       ],
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const Dashboard(),
-                            ),
-                          );
-                        },
-                        child: Text('Login')),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text("Don't have an account? "),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.pushNamed(context, '/signup');
-                        },
-                        child: Text(
-                          'Sign Up',
-                          style: TextStyle(
-                            color: Colors.blue,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                              backgroundColor: Color(0xFF017AFF),
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 96, vertical: 18),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(5))),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const Dashboard(),
+                              ),
+                            );
+                          },
+                          child: Text(
+                            'Login',
+                            style: TextStyle(color: Colors.white),
+                          )),
+                    )
+                  ],
+                ),
+              )
+            ],
           ),
-        ),
+        )),
       ),
     );
   }

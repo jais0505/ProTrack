@@ -26,13 +26,13 @@ class _ProjectScreenState extends State<ProjectScreen>
 
   Future<void> insertProjectdetails() async {
     try {
-      String type = projecttypeController.text;
+      // String type = projecttypeController.text;
       String date = projectdateController.text;
       String review1 = projectreview1Controller.text;
       String review2 = projectreview1Controller.text;
       String review3 = projectreview1Controller.text;
       await supabase.from('tbl_project').insert({
-        'project_type': type,
+        'project_type': _type,
         'project_date': date,
         'project_review1': review1,
         'project_review2': review2,

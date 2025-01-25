@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 
-class Account extends StatelessWidget {
-  const Account({super.key});
+class ProjectScreen extends StatefulWidget {
+  const ProjectScreen({super.key});
 
+  @override
+  State<ProjectScreen> createState() => _ProjectScreenState();
+}
+
+class _ProjectScreenState extends State<ProjectScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -11,10 +16,10 @@ class Account extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(18.0),
             child: Text(
-              "My Account page",
+              "My Projects Page",
               style: TextStyle(fontSize: 30),
             ),
-          )
+          ),
         ],
       ),
     );
