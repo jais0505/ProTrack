@@ -52,7 +52,10 @@ class _FileTypeScreenState extends State<FileTypeScreen>
 
   Future<void> deleteFiletype(int filetypeId) async {
     try {
-      await supabase.from('tbl_filetype').delete().eq('id', filetypeId);
+      await supabase
+          .from('tbl_filetype')
+          .delete()
+          .eq('filetype_id', filetypeId);
       fetchFiletype();
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text(
@@ -71,7 +74,8 @@ class _FileTypeScreenState extends State<FileTypeScreen>
     try {
       await supabase
           .from('tbl_filetype')
-          .update({'filetype_name': filetypeController.text}).eq('id', _editId);
+          .update({'filetype_name': filetypeController.text}).eq(
+              'filetype_id', _editId);
       fetchFiletype();
       filetypeController.clear;
       _editId = 0;
@@ -216,7 +220,7 @@ class _FileTypeScreenState extends State<FileTypeScreen>
                 DataCell(IconButton(
                     onPressed: () {
                       setState(() {
-                        _editId = entry.value['id'];
+                        _editId = entry.value['filetype_id'];
                         filetypeController.text = entry.value['filetype_name'];
                         _isFormVisible = true;
                       });
@@ -228,7 +232,7 @@ class _FileTypeScreenState extends State<FileTypeScreen>
                 DataCell(
                   IconButton(
                     onPressed: () {
-                      deleteFiletype(entry.value['id']);
+                      deleteFiletype(entry.value['filetype_id']);
                     },
                     icon: Icon(
                       Icons.delete,

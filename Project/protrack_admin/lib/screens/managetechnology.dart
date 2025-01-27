@@ -52,7 +52,10 @@ class _TechnologyScreenState extends State<TechnologyScreen>
 
   Future<void> deletetechnology(int techId) async {
     try {
-      await supabase.from('tbl_technology').delete().eq('id', techId);
+      await supabase
+          .from('tbl_technology')
+          .delete()
+          .eq('technology_id', techId);
       fetchTechnology();
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -71,8 +74,10 @@ class _TechnologyScreenState extends State<TechnologyScreen>
 
   Future<void> updateTechnology() async {
     try {
-      await supabase.from('tbl_technology').update(
-          {'technology_name': technologyController.text}).eq('id', _editId);
+      await supabase
+          .from('tbl_technology')
+          .update({'technology_name': technologyController.text}).eq(
+              'technology_id', _editId);
       fetchTechnology();
       technologyController.clear();
       _editId = 0;
@@ -258,7 +263,7 @@ class _TechnologyScreenState extends State<TechnologyScreen>
                     DataCell(IconButton(
                         onPressed: () {
                           setState(() {
-                            _editId = entry.value['id'];
+                            _editId = entry.value['technology_id'];
                             technologyController.text =
                                 entry.value['technology_name'];
                             _isFormVisible = true;
@@ -271,7 +276,7 @@ class _TechnologyScreenState extends State<TechnologyScreen>
                     DataCell(
                       IconButton(
                         onPressed: () {
-                          deletetechnology(entry.value['id']);
+                          deletetechnology(entry.value['technology_id']);
                         },
                         icon: const Icon(Icons.delete, color: Colors.red),
                       ),

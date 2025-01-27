@@ -36,7 +36,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
           Container(
             width: 500,
             height: 830,
-            decoration: BoxDecoration(color: Colors.blue),
+            decoration: BoxDecoration(
+              color: Colors.blue,
+            ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
