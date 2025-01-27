@@ -11,6 +11,8 @@ dependencies:
     sdk: flutter
   firebase_core: ^3.10.1
   supabase_flutter: ^2.0.0
+  image_picker: ^1.1.2
+  firebase_auth: ^5.4.1
 
 dev_dependencies:
   flutter_test:

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:protrack_teacher/main.dart';
+import 'dart:io';
+import 'package:image_picker/image_picker.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class AddstudentsScreen extends StatefulWidget {
   const AddstudentsScreen({super.key});
@@ -10,15 +13,30 @@ class AddstudentsScreen extends StatefulWidget {
 
 class _AddstudentsScreenState extends State<AddstudentsScreen> {
   final TextEditingController studentnameControllor = TextEditingController();
-  final TextEditingController studentemailControllor = TextEditingController();
-  final TextEditingController studentpasswordControllor =
+  final TextEditingController _emailEditingControllor = TextEditingController();
+  final TextEditingController _passwordEditingController =
       TextEditingController();
+
   final TextEditingController studentcontactControllor =
       TextEditingController();
   final TextEditingController yearController = TextEditingController();
   List<Map<String, dynamic>> _yearList = [];
 
   String? selectedYear;
+
+  //Image Picking Function Start
+  File? _image;
+  final ImagePicker _picker = ImagePicker();
+
+  Future<void> _pickImage() async {
+    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() {
+        _image = File(pickedFile.path);
+      });
+    }
+  }
+  //Image Picking Function End
 
   Future<void> fetchyear() async {
     try {
@@ -31,9 +49,89 @@ class _AddstudentsScreenState extends State<AddstudentsScreen> {
     }
   }
 
+  Future<void> register() async {
+    try {
+      final credential =
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: _emailEditingControllor.text,
+        password: _passwordEditingController.text,
+      );
+      if (credential.user!.uid.isNotEmpty) {
+        String uid = credential.user!.uid;
+        await storeData(uid);
+      } else {
+        print("Error User Authentication");
+      }
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'weak-password') {
+        print('The password provided is too weak.');
+      } else if (e.code == 'email-already-in-use') {
+        print('The account already exists for that email.');
+      }
+    } catch (e) {
+      print("Error auth: $e");
+    }
+  }
+
+  Future<void> storeData(uid) async {
+    try {
+      String name = studentnameControllor.text;
+      String email = _emailEditingControllor.text;
+      String password = _passwordEditingController.text;
+      String contact = studentcontactControllor.text;
+      String? year = selectedYear;
+
+      await supabase.from('tbl_student').insert({
+        'student_name': name,
+        'student_email': email,
+        'student_password': password,
+        'student_contact': contact,
+        'year_id': year,
+        'student_auth': uid
+      });
+
+      final imageUrl = await uploadImage(uid);
+      await updateData(uid, imageUrl);
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text(
+          "Student added",
+          style: TextStyle(color: Colors.white),
+        ),
+        backgroundColor: Colors.green,
+      ));
+    } catch (e) {
+      print("Error inserting students data:$e");
+    }
+  }
+
+  Future<void> updateData(final uid, final url) async {
+    try {
+      await supabase
+          .from('tbl_student')
+          .update({'student_photo': url}).eq("student_auth", uid);
+    } catch (e) {
+      print("Image updation failed: $e");
+    }
+  }
+
+  ///File upload Function
+  Future<String?> uploadImage(String uid) async {
+    try {
+      final fileName = 'user_$uid';
+
+      await supabase.storage.from('student').upload(fileName, _image!);
+
+      // Get public URL of the uploaded image
+      final imageUrl = supabase.storage.from('student').getPublicUrl(fileName);
+      return imageUrl;
+    } catch (e) {
+      print('Image upload failed: $e');
+      return null;
+    }
+  }
+
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     fetchyear();
   }
@@ -42,7 +140,7 @@ class _AddstudentsScreenState extends State<AddstudentsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
-      body: Column(
+      body: ListView(
         children: [
           Padding(
             padding: const EdgeInsets.all(10.0),
@@ -51,15 +149,23 @@ class _AddstudentsScreenState extends State<AddstudentsScreen> {
               style: TextStyle(fontSize: 20),
             ),
           ),
-          Container(
-            height: 120,
-            width: 120,
-            child: Icon(
-              Icons.add_a_photo,
-              size: 50,
-              color: Color(0xFF0277BD),
+          //Image Upload Section Start
+          Center(
+            child: GestureDetector(
+              onTap: _pickImage,
+              child: CircleAvatar(
+                radius: 50,
+                backgroundColor: Colors.white38,
+                backgroundImage: _image != null ? FileImage(_image!) : null,
+                child: _image == null
+                    ? const Icon(Icons.camera_alt,
+                        color: Colors.black, size: 30)
+                    : null,
+              ),
             ),
           ),
+          //Image Upload Section End
+
           Padding(
             padding: const EdgeInsets.all(20.0),
             child: TextFormField(
@@ -73,7 +179,7 @@ class _AddstudentsScreenState extends State<AddstudentsScreen> {
           Padding(
             padding: const EdgeInsets.all(20.0),
             child: TextFormField(
-              controller: studentemailControllor,
+              controller: _emailEditingControllor,
               decoration: InputDecoration(
                   hintText: 'Enter student email',
                   border: OutlineInputBorder(),
@@ -83,7 +189,7 @@ class _AddstudentsScreenState extends State<AddstudentsScreen> {
           Padding(
             padding: const EdgeInsets.all(20.0),
             child: TextFormField(
-              controller: studentpasswordControllor,
+              controller: _passwordEditingController,
               decoration: InputDecoration(
                   hintText: 'Enter student password',
                   border: OutlineInputBorder(),
@@ -97,7 +203,7 @@ class _AddstudentsScreenState extends State<AddstudentsScreen> {
               decoration: InputDecoration(
                   hintText: 'Enter student contact',
                   border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.password)),
+                  prefixIcon: Icon(Icons.phone)),
             ),
           ),
           Padding(
@@ -105,7 +211,7 @@ class _AddstudentsScreenState extends State<AddstudentsScreen> {
             child: DropdownButtonFormField<String>(
               decoration: InputDecoration(border: OutlineInputBorder()),
               value: selectedYear,
-              hint: const Text("Select District"),
+              hint: const Text("Select Year"),
               onChanged: (newValue) {
                 setState(() {
                   selectedYear = newValue;
@@ -127,7 +233,10 @@ class _AddstudentsScreenState extends State<AddstudentsScreen> {
                     padding: EdgeInsets.symmetric(horizontal: 70, vertical: 18),
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(5))),
-                onPressed: () {},
+                onPressed: () {
+                  print("Click triggered");
+                  register();
+                },
                 child: Text(
                   'Add',
                   style: TextStyle(color: Colors.white),
