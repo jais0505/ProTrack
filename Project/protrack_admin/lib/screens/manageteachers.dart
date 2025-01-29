@@ -168,7 +168,7 @@ class _TeacherScreenState extends State<TeacherScreen>
                                     fontSize: 16, fontWeight: FontWeight.bold),
                               ),
                             ),
-                            Container(
+                            SizedBox(
                               height: 120,
                               width: 120,
                               child: pickedImage == null

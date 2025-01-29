@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:protrack_student/screens/myaccount.dart';
-import 'package:protrack_student/screens/myprojects.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({super.key});
@@ -14,150 +12,121 @@ class _DashboardState extends State<Dashboard> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'Pro Track',
-          style: TextStyle(fontSize: 28),
-        ),
-        leading: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Image.asset(
-            'assets/Logo1.png',
-            width: 50,
-            height: 50,
-          ),
-        ),
-        backgroundColor: Colors.lightBlue,
+        backgroundColor: Colors.blue,
+        title: Text("Hello, John!"),
+        actions: [
+          IconButton(onPressed: () {}, icon: Icon(Icons.notifications))
+        ],
       ),
-      body: Center(
-        child: Column(
-          children: [
-            Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Image.asset(
-                    'assets/Profile.png',
-                    width: 80,
-                    height: 80,
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Text(
-                    'Name',
-                    style: TextStyle(fontSize: 20),
-                  ),
-                ),
-              ],
-            ),
-            Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Container(
-                width: 400,
-                height: 400,
-                decoration: BoxDecoration(
-                    color: Colors.lightBlueAccent,
-                    borderRadius: BorderRadius.circular(10)),
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Image.asset(
-                        'assets/Edu.jpg',
-                        fit: BoxFit.contain,
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Text(
-                        "Education is the foundation, and technology is the tool; together, they build a future where knowledge knows no boundaries.",
-                        style: TextStyle(fontSize: 18),
-                      ),
-                    )
-                  ],
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "Project Progress",
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(
+                height: 16,
+              ),
+              Center(
+                child: CircularProgressIndicator(
+                  color: Colors.green,
+                  backgroundColor: Colors.blue,
+                  //valueColor: Color(Colors.grey),
+                  semanticsLabel: '75%',
                 ),
               ),
-            ),
-            Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Container(
-                    width: 175,
-                    height: 175,
-                    decoration: BoxDecoration(
-                        color: Colors.lightBlueAccent,
-                        borderRadius: BorderRadius.circular(10)),
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const Account(),
-                          ),
-                        );
-                      },
-                      child: Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(12.0),
-                            child: Image.asset(
-                              "assets/Profile.png",
-                              width: 70,
-                              height: 70,
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: Text(
-                              'My account',
-                              style: TextStyle(fontSize: 18),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+              SizedBox(
+                height: 24,
+              ),
+              Text(
+                'Current Projects',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 16),
+              Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Container(
-                    width: 175,
-                    height: 175,
-                    decoration: BoxDecoration(
-                        color: Colors.lightBlueAccent,
-                        borderRadius: BorderRadius.circular(10)),
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const ProjectScreen(),
-                          ),
-                        );
-                      },
-                      child: Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(12.0),
-                            child: Image.asset(
-                              "assets/Myproject.png",
-                              width: 80,
-                              height: 80,
-                            ),
-                          ),
-                          Text(
-                            'My Project',
-                            style: TextStyle(fontSize: 18),
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
+                elevation: 4,
+                child: ListTile(
+                  title: Text('College Project Management System'),
+                  subtitle: Text('Due: Jan 31, 2025'),
+                  trailing: Text('In Progress'),
                 ),
-              ],
-            )
-          ],
+              ),
+              SizedBox(height: 24),
+              Text(
+                'Upcoming Deadlines',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 16),
+              ListView.builder(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                itemCount: 3,
+                itemBuilder: (context, index) {
+                  return Card(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: ListTile(
+                      leading: Icon(Icons.calendar_today, color: Colors.blue),
+                      title: Text('Review ${index + 1}'),
+                      subtitle: Text('Deadline: Feb ${index + 1}, 2025'),
+                    ),
+                  );
+                },
+              ),
+              SizedBox(
+                height: 24,
+              ),
+              Text(
+                'Announcements',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 16),
+              Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                elevation: 4,
+                color: Colors.deepPurple.shade50,
+                child: ListTile(
+                  leading: Icon(Icons.campaign, color: Colors.blue),
+                  title: Text('Mid-Semester Project Review'),
+                  subtitle: Text('Scheduled on Feb 10, 2025'),
+                ),
+              ),
+              BottomNavigationBar(
+                  type: BottomNavigationBarType.fixed,
+                  selectedItemColor: Colors.blue,
+                  unselectedItemColor: Colors.grey,
+                  currentIndex: 0,
+                  onTap: (index) {},
+                  items: [
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.home),
+                      label: 'Home',
+                    ),
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.work),
+                      label: 'Projects',
+                    ),
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.notifications),
+                      label: 'Notifications',
+                    ),
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.person),
+                      label: 'Profile',
+                    ),
+                  ])
+            ],
+          ),
         ),
       ),
     );

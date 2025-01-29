@@ -142,11 +142,13 @@ class _AddstudentsScreenState extends State<AddstudentsScreen> {
       appBar: AppBar(),
       body: ListView(
         children: [
-          Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Text(
-              "Add Student Form",
-              style: TextStyle(fontSize: 20),
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Text(
+                "Add Student Form",
+                style: TextStyle(fontSize: 20),
+              ),
             ),
           ),
           //Image Upload Section Start
@@ -159,7 +161,7 @@ class _AddstudentsScreenState extends State<AddstudentsScreen> {
                 backgroundImage: _image != null ? FileImage(_image!) : null,
                 child: _image == null
                     ? const Icon(Icons.camera_alt,
-                        color: Colors.black, size: 30)
+                        color: Colors.black, size: 50)
                     : null,
               ),
             ),
@@ -226,7 +228,7 @@ class _AddstudentsScreenState extends State<AddstudentsScreen> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.only(left: 80, right: 80, top: 10),
             child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                     backgroundColor: Color(0xFF017AFF),

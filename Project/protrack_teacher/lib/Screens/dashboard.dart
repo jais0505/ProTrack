@@ -13,24 +13,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        title: Padding(
-          padding: const EdgeInsets.all(4.0),
-          child: Text(
-            "Pro Track",
-            style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
-          ),
-        ),
-        leading: Padding(
-          padding: const EdgeInsets.only(left: 15, top: 6, bottom: 6),
-          child: Image.asset(
-            'assets/Logo1.png',
-            height: 20,
-            width: 20,
-          ),
-        ),
-      ),
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -38,52 +20,43 @@ class _DashboardScreenState extends State<DashboardScreen> {
               width: 500,
               height: 830,
               decoration: BoxDecoration(
-                color: Colors.blue,
+                color: Colors.white,
               ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(18.0),
-                        child: Text(
-                          "Dashboard",
-                          style: TextStyle(fontSize: 20),
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(18.0),
+                          child: Text(
+                            "Dashboard",
+                            style: TextStyle(fontSize: 20),
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(left: 20, bottom: 10),
+                      ],
+                    ),
+                    Center(
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 30),
                         child: Image.asset(
                           'assets/Profile.png',
-                          height: 50,
-                          width: 50,
+                          height: 120,
+                          width: 120,
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.all(14.0),
-                        child: Text(
-                          "Name",
-                          style: TextStyle(fontSize: 18),
-                        ),
-                      )
-                    ],
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 160),
-                    child: Container(
-                      width: 500,
-                      height: 545,
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(60),
-                              topRight: Radius.circular(60))),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(14.0),
+                      child: Text(
+                        "Name",
+                        style: TextStyle(fontSize: 18),
+                      ),
+                    ),
+                    Container(
+                      decoration: BoxDecoration(),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -94,7 +67,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               width: 400,
                               height: 100,
                               decoration: BoxDecoration(
-                                  color: Colors.blue,
+                                  color: Color(0xFF161616),
                                   borderRadius: BorderRadius.circular(10)),
                               child: GestureDetector(
                                 onTap: () {
@@ -110,7 +83,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     "My Account",
                                     style: TextStyle(
                                         fontSize: 22,
-                                        fontWeight: FontWeight.bold),
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white),
                                   ),
                                 ),
                               ),
@@ -123,14 +97,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               width: 400,
                               height: 100,
                               decoration: BoxDecoration(
-                                  color: Colors.blue,
+                                  color: Color(0xFF161616),
                                   borderRadius: BorderRadius.circular(10)),
                               child: Center(
                                 child: Text(
                                   "Manage Project",
                                   style: TextStyle(
                                       fontSize: 22,
-                                      fontWeight: FontWeight.bold),
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white),
                                 ),
                               ),
                             ),
@@ -142,7 +117,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               width: 400,
                               height: 100,
                               decoration: BoxDecoration(
-                                  color: Colors.blue,
+                                  color: Color(0xFF161616),
                                   borderRadius: BorderRadius.circular(10)),
                               child: GestureDetector(
                                 onTap: () {
@@ -159,7 +134,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     "Manage Students",
                                     style: TextStyle(
                                         fontSize: 22,
-                                        fontWeight: FontWeight.bold),
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white),
                                   ),
                                 ),
                               ),
@@ -168,8 +144,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         ],
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ],
