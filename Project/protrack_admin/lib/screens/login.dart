@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:protrack_admin/main.dart';
 import 'package:protrack_admin/screens/dashboard.dart';
+import 'package:cherry_toast/resources/arrays.dart';
+import 'package:cherry_toast/cherry_toast.dart';
 
 class AdminLogin extends StatefulWidget {
   const AdminLogin({super.key});
@@ -10,6 +13,31 @@ class AdminLogin extends StatefulWidget {
 
 class _AdminLoginState extends State<AdminLogin> {
   bool passkey = true;
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+
+  Future<void> signIn() async {
+    try {
+      await supabase.auth.signInWithPassword(
+          password: _passwordController.text, email: _emailController.text);
+      Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => AdminHome(),
+          ));
+    } catch (e) {
+      print("Error occur in login:$e");
+      CherryToast.error(
+              description: Text("No user found for that email.",
+                  style: TextStyle(color: Colors.black)),
+              animationType: AnimationType.fromRight,
+              animationDuration: Duration(milliseconds: 1000),
+              autoDismiss: true)
+          .show(context);
+      print('No user found for that email.');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

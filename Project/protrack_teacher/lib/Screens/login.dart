@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:protrack_teacher/Screens/dashboard.dart';
 import 'package:cherry_toast/resources/arrays.dart';
@@ -28,7 +27,17 @@ class _LoginScreenState extends State<LoginScreen> {
           MaterialPageRoute(
             builder: (context) => DashboardScreen(),
           ));
-    } catch (e) {}
+    } catch (e) {
+      print("Error occur in login:$e");
+      CherryToast.error(
+              description: Text("No user found for that email.",
+                  style: TextStyle(color: Colors.black)),
+              animationType: AnimationType.fromRight,
+              animationDuration: Duration(milliseconds: 1000),
+              autoDismiss: true)
+          .show(context);
+      print('No user found for that email.');
+    }
   }
 
   @override
