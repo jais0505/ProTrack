@@ -11,7 +11,11 @@ class Dashboard extends StatefulWidget {
 
 class _DashboardState extends State<Dashboard> {
   int _selectedIndex = 0;
-  final List<Widget> _pages = [Dashboard(), Account(), ProjectScreen()];
+  final List<Widget> items = [Dashboard(), Account(), ProjectScreen()];
+
+  void onBottomNavigationIconTap(int index) {
+    _selectedIndex = index;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -79,24 +83,74 @@ class _DashboardState extends State<Dashboard> {
                 },
               ),
               SizedBox(
-                height: 24,
+                height: 5,
               ),
-              Text(
-                'Announcements',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 16),
-              Card(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                elevation: 4,
-                color: Colors.deepPurple.shade50,
-                child: ListTile(
-                  leading: Icon(Icons.campaign, color: Colors.blue),
-                  title: Text('Mid-Semester Project Review'),
-                  subtitle: Text('Scheduled on Feb 10, 2025'),
-                ),
+              Row(
+                children: [
+                  SizedBox(
+                    height: 150,
+                    width: 187,
+                    child: Card(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      elevation: 10,
+                      color: Colors.blue,
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const Account(),
+                              ),
+                            );
+                          },
+                          child: Center(
+                            child: Text(
+                              "My account",
+                              style: TextStyle(fontSize: 18),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    width: 4,
+                  ),
+                  SizedBox(
+                    height: 150,
+                    width: 187,
+                    child: Card(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      elevation: 10,
+                      color: Colors.blue,
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const ProjectScreen(),
+                              ),
+                            );
+                          },
+                          child: Center(
+                            child: Text(
+                              "My projects",
+                              style: TextStyle(fontSize: 18),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  )
+                ],
               ),
               BottomNavigationBar(
                   type: BottomNavigationBarType.fixed,
@@ -107,6 +161,7 @@ class _DashboardState extends State<Dashboard> {
                     setState(() {
                       _selectedIndex = index;
                     });
+                    items[_selectedIndex];
                   },
                   items: [
                     BottomNavigationBarItem(
