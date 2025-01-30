@@ -2,7 +2,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:protrack_admin/main.dart';
 import 'package:file_picker/file_picker.dart';
 
@@ -41,15 +41,12 @@ class _TeacherScreenState extends State<TeacherScreen>
 
   Future<void> register() async {
     try {
-      final credential =
-          await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: _emailEditingController.text,
-        password: _passwordEditingController.text,
-      );
-      if (credential.user!.uid.isNotEmpty) {
-        await storeData(credential.user!.uid);
-      } else {
-        print("Authentication Failed");
+      final auth = await supabase.auth.signUp(
+          password: _passwordEditingController.text,
+          email: _emailEditingController.text);
+      final uid = auth.user!.id;
+      if (uid.isNotEmpty || uid != "") {
+        storeData(uid);
       }
     } catch (e) {
       print("Authentication Error: $e");
@@ -66,11 +63,11 @@ class _TeacherScreenState extends State<TeacherScreen>
 
       if (url!.isNotEmpty) {
         await supabase.from('tbl_teacher').insert({
+          'teacher_id': uid,
           'teacher_name': name,
           'teacher_email': email,
           'teacher_contact': contact,
           'teacher_password': password,
-          'teacher_auth': uid,
           'teacher_photo': url,
         });
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
@@ -80,6 +77,10 @@ class _TeacherScreenState extends State<TeacherScreen>
           ),
           backgroundColor: Colors.green,
         ));
+        _nameController.clear();
+        _passwordEditingController.clear();
+        _emailEditingController.clear();
+        _contactController.clear();
       } else {
         print("Teacher profile not given");
       }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:protrack_teacher/Screens/managestudents.dart';
 import 'package:protrack_teacher/Screens/myaccount.dart';
+import 'package:protrack_teacher/Screens/viewprojects.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -99,13 +100,24 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               decoration: BoxDecoration(
                                   color: Color(0xFF161616),
                                   borderRadius: BorderRadius.circular(10)),
-                              child: Center(
-                                child: Text(
-                                  "Manage Project",
-                                  style: TextStyle(
-                                      fontSize: 22,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white),
+                              child: GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          const ViewProjects(),
+                                    ),
+                                  );
+                                },
+                                child: Center(
+                                  child: Text(
+                                    "View Project",
+                                    style: TextStyle(
+                                        fontSize: 22,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white),
+                                  ),
                                 ),
                               ),
                             ),

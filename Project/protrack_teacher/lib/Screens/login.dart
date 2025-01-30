@@ -90,18 +90,18 @@ class _LoginScreenState extends State<LoginScreen> {
             child: Column(
               children: [
                 SizedBox(
-                  height: 70,
+                  height: 10,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    SizedBox(height: 100),
+                    SizedBox(height: 40),
                     Padding(
                       padding: const EdgeInsets.all(15),
                       child: Image.asset(
                         'assets/Logo1.png',
-                        width: 40,
-                        height: 40,
+                        width: 45,
+                        height: 45,
                       ),
                     ),
                     Text(
@@ -118,7 +118,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   height: 5,
                 ),
                 Container(
-                  width: 310,
+                  width: 300,
                   height: 400,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(7),

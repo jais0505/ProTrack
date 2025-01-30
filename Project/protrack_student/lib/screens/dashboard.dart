@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:protrack_student/screens/myaccount.dart';
+import 'package:protrack_student/screens/myprojects.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({super.key});
@@ -8,12 +10,15 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
+  int _selectedIndex = 0;
+  final List<Widget> _pages = [Dashboard(), Account(), ProjectScreen()];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue,
-        title: Text("Hello, John!"),
+        title: Text("Hello, User!"),
         actions: [
           IconButton(onPressed: () {}, icon: Icon(Icons.notifications))
         ],
@@ -30,14 +35,6 @@ class _DashboardState extends State<Dashboard> {
               ),
               SizedBox(
                 height: 16,
-              ),
-              Center(
-                child: CircularProgressIndicator(
-                  color: Colors.green,
-                  backgroundColor: Colors.blue,
-                  //valueColor: Color(Colors.grey),
-                  semanticsLabel: '75%',
-                ),
               ),
               SizedBox(
                 height: 24,
@@ -106,7 +103,11 @@ class _DashboardState extends State<Dashboard> {
                   selectedItemColor: Colors.blue,
                   unselectedItemColor: Colors.grey,
                   currentIndex: 0,
-                  onTap: (index) {},
+                  onTap: (index) {
+                    setState(() {
+                      _selectedIndex = index;
+                    });
+                  },
                   items: [
                     BottomNavigationBarItem(
                       icon: Icon(Icons.home),
