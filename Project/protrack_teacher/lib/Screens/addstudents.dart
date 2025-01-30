@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:protrack_teacher/main.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 class AddstudentsScreen extends StatefulWidget {
   const AddstudentsScreen({super.key});
@@ -51,22 +50,13 @@ class _AddstudentsScreenState extends State<AddstudentsScreen> {
 
   Future<void> register() async {
     try {
-      final credential =
-          await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: _emailEditingControllor.text,
-        password: _passwordEditingController.text,
-      );
-      if (credential.user!.uid.isNotEmpty) {
-        String uid = credential.user!.uid;
-        await storeData(uid);
-      } else {
-        print("Error User Authentication");
-      }
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'weak-password') {
-        print('The password provided is too weak.');
-      } else if (e.code == 'email-already-in-use') {
-        print('The account already exists for that email.');
+      final auth = await supabase.auth.signUp(
+          password: _passwordEditingController.text,
+          email: _emailEditingControllor.text);
+
+      final uid = auth.user!.id;
+      if (uid.isEmpty || uid != "") {
+        storeData(uid);
       }
     } catch (e) {
       print("Error auth: $e");
@@ -87,7 +77,7 @@ class _AddstudentsScreenState extends State<AddstudentsScreen> {
         'student_password': password,
         'student_contact': contact,
         'year_id': year,
-        'student_auth': uid
+        'student_id': uid
       });
 
       final imageUrl = await uploadImage(uid);

@@ -81,6 +81,9 @@ class _TeacherScreenState extends State<TeacherScreen>
         _passwordEditingController.clear();
         _emailEditingController.clear();
         _contactController.clear();
+        setState(() {
+          pickedImage = null;
+        });
       } else {
         print("Teacher profile not given");
       }
