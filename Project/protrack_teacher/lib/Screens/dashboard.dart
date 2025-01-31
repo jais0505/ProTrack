@@ -31,10 +31,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Padding(
-                          padding: const EdgeInsets.all(18.0),
+                          padding: const EdgeInsets.only(top: 30, left: 20),
                           child: Text(
                             "Dashboard",
-                            style: TextStyle(fontSize: 20),
+                            style: TextStyle(
+                                fontSize: 24, fontWeight: FontWeight.bold),
                           ),
                         ),
                       ],

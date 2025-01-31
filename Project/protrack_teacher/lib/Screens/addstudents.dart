@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:protrack_teacher/main.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
+import 'package:protrack_teacher/services/auth_service.dart';
 
 class AddstudentsScreen extends StatefulWidget {
   const AddstudentsScreen({super.key});
@@ -23,7 +24,8 @@ class _AddstudentsScreenState extends State<AddstudentsScreen> {
 
   String? selectedYear;
 
-  //Image Picking Function Start
+  final AuthService _authService = AuthService();
+
   File? _image;
   final ImagePicker _picker = ImagePicker();
 
@@ -35,7 +37,6 @@ class _AddstudentsScreenState extends State<AddstudentsScreen> {
       });
     }
   }
-  //Image Picking Function End
 
   Future<void> fetchyear() async {
     try {
@@ -54,6 +55,8 @@ class _AddstudentsScreenState extends State<AddstudentsScreen> {
           password: _passwordEditingController.text,
           email: _emailEditingControllor.text);
 
+      await _authService.relogin();
+
       final uid = auth.user!.id;
       if (uid.isEmpty || uid != "") {
         storeData(uid);
@@ -70,14 +73,23 @@ class _AddstudentsScreenState extends State<AddstudentsScreen> {
       String password = _passwordEditingController.text;
       String contact = studentcontactControllor.text;
       String? year = selectedYear;
-
+      String teacherId = supabase.auth.currentUser!.id;
+      print("teacherId:$teacherId");
       await supabase.from('tbl_student').insert({
         'student_name': name,
         'student_email': email,
         'student_password': password,
         'student_contact': contact,
         'year_id': year,
-        'student_id': uid
+        'student_id': uid,
+        'teacher_id': teacherId
+      });
+      studentnameControllor.clear();
+      studentcontactControllor.clear();
+      _emailEditingControllor.clear();
+      _passwordEditingController.clear();
+      setState(() {
+        selectedYear = null;
       });
 
       final imageUrl = await uploadImage(uid);
@@ -98,13 +110,12 @@ class _AddstudentsScreenState extends State<AddstudentsScreen> {
     try {
       await supabase
           .from('tbl_student')
-          .update({'student_photo': url}).eq("student_auth", uid);
+          .update({'student_photo': url}).eq("student_id", uid);
     } catch (e) {
       print("Image updation failed: $e");
     }
   }
 
-  ///File upload Function
   Future<String?> uploadImage(String uid) async {
     try {
       final fileName = 'user_$uid';
@@ -141,7 +152,6 @@ class _AddstudentsScreenState extends State<AddstudentsScreen> {
               ),
             ),
           ),
-          //Image Upload Section Start
           Center(
             child: GestureDetector(
               onTap: _pickImage,
@@ -156,8 +166,6 @@ class _AddstudentsScreenState extends State<AddstudentsScreen> {
               ),
             ),
           ),
-          //Image Upload Section End
-
           Padding(
             padding: const EdgeInsets.all(20.0),
             child: TextFormField(
@@ -222,7 +230,7 @@ class _AddstudentsScreenState extends State<AddstudentsScreen> {
             child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                     backgroundColor: Color(0xFF017AFF),
-                    padding: EdgeInsets.symmetric(horizontal: 70, vertical: 18),
+                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 18),
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(5))),
                 onPressed: () {

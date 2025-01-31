@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:protrack_student/main.dart';
 import 'package:protrack_student/screens/dashboard.dart';
+import 'package:cherry_toast/resources/arrays.dart';
+import 'package:cherry_toast/cherry_toast.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -10,6 +13,32 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   bool passkey = true;
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+
+  Future<void> signIn() async {
+    try {
+      await supabase.auth.signInWithPassword(
+          password: _passwordController.text, email: _emailController.text);
+
+      Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => Dashboard(),
+          ));
+    } catch (e) {
+      print("Error occur in login:$e");
+      CherryToast.error(
+              description: Text("No user found for that email.",
+                  style: TextStyle(color: Colors.black)),
+              animationType: AnimationType.fromRight,
+              animationDuration: Duration(milliseconds: 1000),
+              autoDismiss: true)
+          .show(context);
+      print('No user found for that email.');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -75,6 +104,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: Padding(
                         padding: const EdgeInsets.only(left: 22, right: 22),
                         child: TextFormField(
+                          controller: _emailController,
                           decoration: InputDecoration(
                               labelText: "Email",
                               labelStyle: TextStyle(fontSize: 12),
@@ -90,6 +120,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: Padding(
                         padding: const EdgeInsets.only(left: 22, right: 22),
                         child: TextFormField(
+                          controller: _passwordController,
                           decoration: InputDecoration(
                               labelText: 'Password',
                               labelStyle: TextStyle(fontSize: 12),
@@ -135,12 +166,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(5))),
                           onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const Dashboard(),
-                              ),
-                            );
+                            signIn();
                           },
                           child: Text(
                             'Login',

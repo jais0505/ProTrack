@@ -7,9 +7,11 @@ environment:
   sdk: ^3.6.0
 
 dependencies:
+  cherry_toast: ^1.11.0
   flutter:
     sdk: flutter
   percent_indicator: ^4.2.4
+  supabase_flutter: ^2.8.3
 
 dev_dependencies:
   flutter_test:

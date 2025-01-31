@@ -13,42 +13,70 @@ class _ManagestudentsScreenState extends State<ManagestudentsScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
+      appBar: AppBar(
+        backgroundColor: Colors.blue,
+      ),
+      body: ListView(
         children: [
-          SizedBox(
-            height: 50,
-          ),
           Padding(
-            padding: const EdgeInsets.all(10.0),
+            padding: const EdgeInsets.only(left: 20, top: 10),
             child: Text(
               "Manage Students",
-              style: TextStyle(fontSize: 20),
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: ElevatedButton.icon(
-              style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xFF161616),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5)),
-                  padding: EdgeInsets.symmetric(horizontal: 25, vertical: 18)),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const AddstudentsScreen(),
+            padding: const EdgeInsets.all(16.0),
+            child: Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 6, left: 10, right: 10),
+                  child: ElevatedButton.icon(
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.redAccent,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20)),
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 30, vertical: 60)),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const AddstudentsScreen(),
+                        ),
+                      );
+                    },
+                    label: Text(
+                      "Add Student",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    icon: Icon(
+                      Icons.add,
+                      color: Colors.white,
+                    ),
                   ),
-                );
-              },
-              label: Text(
-                "Add Student",
-                style: TextStyle(color: Colors.white),
-              ),
-              icon: Icon(
-                Icons.add,
-                color: Colors.white,
-              ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 6, left: 10, right: 5),
+                  child: ElevatedButton.icon(
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.green,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20)),
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 30, vertical: 60)),
+                    onPressed: () {},
+                    label: Text(
+                      "View Student",
+                      style: TextStyle(color: Colors.white, fontSize: 15),
+                    ),
+                    icon: Icon(
+                      Icons.view_headline_sharp,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ],

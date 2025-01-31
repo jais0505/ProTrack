@@ -3,6 +3,7 @@ import 'package:protrack_teacher/Screens/dashboard.dart';
 import 'package:cherry_toast/resources/arrays.dart';
 import 'package:cherry_toast/cherry_toast.dart';
 import 'package:protrack_teacher/main.dart';
+import 'package:protrack_teacher/services/auth_service.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -16,9 +17,12 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailEditingController = TextEditingController();
   final TextEditingController _passwordEditingController =
       TextEditingController();
+  final AuthService _authService = AuthService();
 
   Future<void> signIn() async {
     try {
+      await _authService.storeCredentials(
+          _emailEditingController.text, _passwordEditingController.text);
       await supabase.auth.signInWithPassword(
           password: _passwordEditingController.text,
           email: _emailEditingController.text);
