@@ -1,7 +1,49 @@
 import 'package:flutter/material.dart';
+import 'package:protrack_student/main.dart';
 
-class Account extends StatelessWidget {
+class Account extends StatefulWidget {
   const Account({super.key});
+
+  @override
+  State<Account> createState() => _AccountState();
+}
+
+class _AccountState extends State<Account> {
+  // List<Map<String, dynamic>> _studentdataList = [];
+
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _phonenoController = TextEditingController();
+
+  String Name = "";
+  Future<void> fetchData() async {
+    try {
+      String? studentid = supabase.auth.currentUser?.id;
+
+      if (studentid != null) {
+        final response = await supabase
+            .from('tbl_student')
+            .select()
+            .eq("student_id", studentid)
+            .single();
+        setState(() {
+          Name = response['student_name'];
+          _emailController.text = response['student_email'];
+          _phonenoController.text = response['student_contact'];
+        });
+      } else {
+        print("Error");
+      }
+    } catch (e) {
+      print("Error Fetching data:$e");
+    }
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    fetchData();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +109,7 @@ class Account extends StatelessWidget {
                               Padding(
                                 padding: const EdgeInsets.only(right: 124),
                                 child: Text(
-                                  "Name",
+                                  Name,
                                   style: TextStyle(fontSize: 25),
                                 ),
                               ),
@@ -106,6 +148,7 @@ class Account extends StatelessWidget {
                     padding:
                         const EdgeInsets.only(top: 10, left: 16, right: 16),
                     child: TextField(
+                      controller: _emailController,
                       decoration: InputDecoration(border: OutlineInputBorder()),
                     ),
                   ),
@@ -120,6 +163,7 @@ class Account extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.only(top: 5, left: 16, right: 16),
                     child: TextField(
+                      controller: _phonenoController,
                       decoration: InputDecoration(border: OutlineInputBorder()),
                     ),
                   ),
@@ -128,20 +172,6 @@ class Account extends StatelessWidget {
                         const EdgeInsets.only(right: 200, top: 16, left: 16),
                     child: Text(
                       "Year of study",
-                      style: TextStyle(fontSize: 20),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 5, left: 16, right: 16),
-                    child: TextField(
-                      decoration: InputDecoration(border: OutlineInputBorder()),
-                    ),
-                  ),
-                  Padding(
-                    padding:
-                        const EdgeInsets.only(right: 200, top: 16, left: 16),
-                    child: Text(
-                      "Register No",
                       style: TextStyle(fontSize: 20),
                     ),
                   ),
