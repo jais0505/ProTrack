@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:protrack_teacher/Screens/dashboard.dart';
+
 import 'package:cherry_toast/resources/arrays.dart';
 import 'package:cherry_toast/cherry_toast.dart';
+import 'package:protrack_teacher/Screens/dashboard.dart';
+
 import 'package:protrack_teacher/main.dart';
 import 'package:protrack_teacher/services/auth_service.dart';
 
@@ -29,7 +31,7 @@ class _LoginScreenState extends State<LoginScreen> {
       Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => DashboardScreen(),
+            builder: (context) => Dashboard(),
           ));
     } catch (e) {
       print("Error occur in login:$e");

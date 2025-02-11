@@ -69,7 +69,7 @@ class Homepage extends StatelessWidget {
               children: [
                 SizedBox(
                   height: 150,
-                  width: 187,
+                  width: 178,
                   child: Card(
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
@@ -102,7 +102,7 @@ class Homepage extends StatelessWidget {
                 ),
                 SizedBox(
                   height: 150,
-                  width: 187,
+                  width: 178,
                   child: Card(
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
