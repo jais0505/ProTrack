@@ -37,11 +37,12 @@ class _DashboardState extends State<Dashboard> {
           },
           items: [
             BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-            BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.account_circle), label: 'Profile'),
             BottomNavigationBarItem(
                 icon: Icon(Icons.computer_rounded), label: 'Project'),
             BottomNavigationBarItem(
-                icon: Icon(Icons.child_care), label: 'Manage Student'),
+                icon: Icon(Icons.group), label: 'Manage Student'),
           ]),
     );
   }
