@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:protrack_teacher/Screens/changepassword.dart';
 import 'package:protrack_teacher/Screens/editprofile.dart';
 import 'package:protrack_teacher/main.dart';
 
@@ -51,7 +52,7 @@ class _AccountState extends State<Account> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
-        padding: const EdgeInsets.only(left: 40, right: 40),
+        padding: const EdgeInsets.only(left: 30, right: 30),
         child: Column(
           children: [
             SizedBox(
@@ -61,13 +62,16 @@ class _AccountState extends State<Account> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Text(
-                    "Profile",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        fontSize: 30,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF004A61)),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 10),
+                    child: Text(
+                      "Profile",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          fontSize: 30,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF004A61)),
+                    ),
                   ),
                   Center(
                     child: ClipOval(
@@ -86,14 +90,15 @@ class _AccountState extends State<Account> {
                       ),
                     ),
                   ),
-                  Center(
+                  Padding(
+                    padding: const EdgeInsets.only(left: 60, right: 60),
                     child: ElevatedButton.icon(
                       style: ElevatedButton.styleFrom(
                           backgroundColor: Color(0xFF004A61),
                           shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15)),
+                              borderRadius: BorderRadius.circular(10)),
                           padding: EdgeInsets.symmetric(
-                              horizontal: 50, vertical: 8)),
+                              horizontal: 10, vertical: 8)),
                       onPressed: () {
                         Navigator.push(
                             context,
@@ -111,6 +116,34 @@ class _AccountState extends State<Account> {
                     ),
                   ),
                   SizedBox(
+                    height: 10,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 60, right: 60),
+                    child: ElevatedButton.icon(
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Color(0xFF004A61),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10)),
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 5, vertical: 8)),
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => Changepassword()));
+                      },
+                      label: Text(
+                        "Change Password",
+                        style: TextStyle(fontSize: 20, color: Colors.white),
+                      ),
+                      icon: Icon(
+                        Icons.change_circle,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                  SizedBox(
                     height: 40,
                   ),
                   Text(
@@ -121,16 +154,18 @@ class _AccountState extends State<Account> {
                   TextField(
                     controller: _emailController,
                     decoration: InputDecoration(border: OutlineInputBorder()),
+                    style: TextStyle(color: Color(0xFF004A61)),
                   ),
                   SizedBox(
                     height: 30,
                   ),
-                  Text("Contact No",
+                  Text("Contact",
                       style: TextStyle(fontSize: 20, color: Color(0xFF004A61))),
                   SizedBox(height: 5),
                   TextField(
                     controller: _phonenoController,
                     decoration: InputDecoration(border: OutlineInputBorder()),
+                    style: TextStyle(color: Color(0xFF004A61)),
                   ),
                 ],
               ),

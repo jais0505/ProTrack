@@ -22,10 +22,12 @@ class _StudentProfileState extends State<StudentProfile> {
                 padding: const EdgeInsets.only(top: 50),
                 child: Column(
                   children: [
-                    Image.network(
-                      width: 120,
-                      height: 120,
-                      widget.student['student_photo'],
+                    ClipOval(
+                      child: Image.network(
+                        width: 120,
+                        height: 120,
+                        widget.student['student_photo'],
+                      ),
                     ),
                     SizedBox(
                       height: 10,

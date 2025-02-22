@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:protrack_teacher/Screens/addstudents.dart';
 import 'package:protrack_teacher/Screens/student_profile.dart';
 import 'package:protrack_teacher/main.dart';
 
@@ -37,7 +38,7 @@ class _ManagestudentsScreenState extends State<ManagestudentsScreen>
       body: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.only(left: 20, top: 10),
+            padding: const EdgeInsets.only(left: 20, top: 50),
             child: Text(
               "Manage Students",
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
@@ -62,9 +63,19 @@ class _ManagestudentsScreenState extends State<ManagestudentsScreen>
                 title: Text(students['student_name']),
               );
             },
-          )
+          ),
         ],
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => AddstudentsScreen()));
+        },
+        backgroundColor: Color(0xFF004A61),
+        foregroundColor: Colors.white,
+        child: Icon(Icons.add),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 }

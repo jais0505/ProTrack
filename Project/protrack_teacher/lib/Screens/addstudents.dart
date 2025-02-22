@@ -1,3 +1,5 @@
+import 'package:cherry_toast/cherry_toast.dart';
+import 'package:cherry_toast/resources/arrays.dart';
 import 'package:flutter/material.dart';
 import 'package:protrack_teacher/main.dart';
 import 'dart:io';
@@ -15,6 +17,8 @@ class _AddstudentsScreenState extends State<AddstudentsScreen> {
   final TextEditingController studentnameControllor = TextEditingController();
   final TextEditingController _emailEditingControllor = TextEditingController();
   final TextEditingController _passwordEditingController =
+      TextEditingController();
+  final TextEditingController _repassEditingController =
       TextEditingController();
 
   final TextEditingController studentcontactControllor =
@@ -51,15 +55,26 @@ class _AddstudentsScreenState extends State<AddstudentsScreen> {
 
   Future<void> register() async {
     try {
-      final auth = await supabase.auth.signUp(
-          password: _passwordEditingController.text,
-          email: _emailEditingControllor.text);
+      if (_passwordEditingController.text == _repassEditingController.text) {
+        final auth = await supabase.auth.signUp(
+            password: _passwordEditingController.text,
+            email: _emailEditingControllor.text);
 
-      await _authService.relogin();
+        await _authService.relogin();
 
-      final uid = auth.user!.id;
-      if (uid.isEmpty || uid != "") {
-        storeData(uid);
+        final uid = auth.user!.id;
+        if (uid.isEmpty || uid != "") {
+          storeData(uid);
+        }
+      } else {
+        CherryToast.error(
+                description: Text("password and re-entered password mismatch",
+                    style: TextStyle(color: Colors.black)),
+                animationType: AnimationType.fromRight,
+                animationDuration: Duration(milliseconds: 1000),
+                autoDismiss: true)
+            .show(context);
+        print("Password and re-entered password not same");
       }
     } catch (e) {
       print("Error auth: $e");
@@ -74,6 +89,7 @@ class _AddstudentsScreenState extends State<AddstudentsScreen> {
       String contact = studentcontactControllor.text;
       String? year = selectedYear;
       String teacherId = supabase.auth.currentUser!.id;
+
       print("teacherId:$teacherId");
       await supabase.from('tbl_student').insert({
         'student_name': name,
@@ -88,8 +104,10 @@ class _AddstudentsScreenState extends State<AddstudentsScreen> {
       studentcontactControllor.clear();
       _emailEditingControllor.clear();
       _passwordEditingController.clear();
+      _repassEditingController.clear;
       setState(() {
         selectedYear = null;
+        _image = null;
       });
 
       final imageUrl = await uploadImage(uid);
@@ -199,6 +217,16 @@ class _AddstudentsScreenState extends State<AddstudentsScreen> {
           Padding(
             padding: const EdgeInsets.all(20.0),
             child: TextFormField(
+              controller: _repassEditingController,
+              decoration: InputDecoration(
+                  hintText: 'Re-enter password',
+                  border: OutlineInputBorder(),
+                  prefixIcon: Icon(Icons.password)),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: TextFormField(
               controller: studentcontactControllor,
               decoration: InputDecoration(
                   hintText: 'Enter student contact',
@@ -242,6 +270,9 @@ class _AddstudentsScreenState extends State<AddstudentsScreen> {
                   style: TextStyle(color: Colors.white),
                 )),
           ),
+          SizedBox(
+            height: 50,
+          )
         ],
       ),
     );
