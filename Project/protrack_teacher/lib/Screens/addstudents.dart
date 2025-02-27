@@ -166,7 +166,7 @@ class _AddstudentsScreenState extends State<AddstudentsScreen> {
               padding: const EdgeInsets.all(10.0),
               child: Text(
                 "Add Student Form",
-                style: TextStyle(fontSize: 20),
+                style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
               ),
             ),
           ),

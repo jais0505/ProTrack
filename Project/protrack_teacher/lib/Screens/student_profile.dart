@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:protrack_teacher/Screens/mainproject.dart';
-import 'package:protrack_teacher/Screens/miniproject.dart';
 
 class StudentProfile extends StatefulWidget {
   final Map<String, dynamic> student;
@@ -44,10 +42,10 @@ class _StudentProfileState extends State<StudentProfile> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => Miniproject()));
+                        // Navigator.push(
+                        //     context,
+                        //     MaterialPageRoute(
+                        //         builder: (context) => ));
                       },
                       child: Container(
                         width: 350,
@@ -71,10 +69,10 @@ class _StudentProfileState extends State<StudentProfile> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => Mainproject()));
+                        // Navigator.push(
+                        //     context,
+                        //     MaterialPageRoute(
+                        //         builder: (context) => Mainproject()));
                       },
                       child: Container(
                         width: 350,

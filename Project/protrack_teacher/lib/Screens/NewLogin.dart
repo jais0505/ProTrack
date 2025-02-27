@@ -13,8 +13,7 @@ class TeacherLoginPage extends StatelessWidget {
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  Color(0xFFE5F8F9),
-                  Color(0xFFB2EBF2)
+                  Color(0xFFF5F5F5),
                 ], // Light blue shades
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
@@ -31,7 +30,7 @@ class TeacherLoginPage extends StatelessWidget {
                 children: [
                   // Welcome Text
                   Text(
-                    "Selamat Datang!",
+                    "Welcome!",
                     style: TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
@@ -40,7 +39,7 @@ class TeacherLoginPage extends StatelessWidget {
                   ),
                   SizedBox(height: 5),
                   Text(
-                    "Masukkan NISN dan password untuk memulai belajar.",
+                    "Enter email and password to start.",
                     style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                   ),
                   SizedBox(height: 40),
@@ -48,10 +47,9 @@ class TeacherLoginPage extends StatelessWidget {
                   // NISN Field
                   TextField(
                     decoration: InputDecoration(
-                      labelText: "NISN",
+                      labelText: "Email",
                       labelStyle: TextStyle(color: Colors.grey),
-                      prefixIcon:
-                          Icon(Icons.person_outline, color: Color(0xFF004A61)),
+                      prefixIcon: Icon(Icons.email, color: Color(0xFF004A61)),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
@@ -67,8 +65,6 @@ class TeacherLoginPage extends StatelessWidget {
                       labelStyle: TextStyle(color: Colors.grey),
                       prefixIcon:
                           Icon(Icons.lock_outline, color: Color(0xFF004A61)),
-                      suffixText: "Lupa Password?",
-                      suffixStyle: TextStyle(color: Color(0xFF004A61)),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
@@ -92,30 +88,11 @@ class TeacherLoginPage extends StatelessWidget {
                         print("Login Button Pressed");
                       },
                       child: Text(
-                        "MULAI BELAJAR",
+                        "LOGIN",
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 20),
-
-                  // Additional Bottom Links
-                  Align(
-                    alignment: Alignment.center,
-                    child: TextButton(
-                      onPressed: () {
-                        print("Need Help? Pressed");
-                      },
-                      child: Text(
-                        "Butuh bantuan?",
-                        style: TextStyle(
-                          color: Color(0xFF004A61),
-                          fontSize: 14,
-                          decoration: TextDecoration.underline,
                         ),
                       ),
                     ),
@@ -129,5 +106,3 @@ class TeacherLoginPage extends StatelessWidget {
     );
   }
 }
-
-void main() => runApp(MaterialApp(home: TeacherLoginPage()));

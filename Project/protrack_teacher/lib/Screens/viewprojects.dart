@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:protrack_teacher/Screens/miniproject.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import 'package:protrack_teacher/main.dart'; // Ensure Supabase instance is imported
 
@@ -39,64 +40,100 @@ class _ViewProjectsState extends State<ViewProjects> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("View Projects")),
-      body: isLoading
-          ? Center(child: CircularProgressIndicator())
-          : Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: SfDataGrid(
-                horizontalScrollPhysics: AlwaysScrollableScrollPhysics(),
-                source: projectDataSource,
-                allowFiltering: true,
-                rowHeight: 100,
-                columns: [
-                  GridColumn(
-                    columnName: 'id',
-                    label: Center(
-                        child: Text('ID',
-                            style: TextStyle(fontWeight: FontWeight.bold))),
+        appBar: AppBar(title: Text("View Projects")),
+        body: isLoading
+            ? Center(child: CircularProgressIndicator())
+            : Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(
+                        left: 30, right: 30, top: 10, bottom: 10),
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => Miniproject()));
+                      },
+                      child: Container(
+                        width: 500,
+                        height: 120,
+                        decoration: BoxDecoration(
+                            color: Color(0xFF004A61),
+                            borderRadius: BorderRadius.circular(10)),
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 85, right: 85, top: 40, bottom: 40),
+                              child: Row(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(right: 10),
+                                    child: Text(
+                                      "Mini Project",
+                                      style: TextStyle(
+                                          fontSize: 22,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                  Icon(
+                                    Icons.computer,
+                                    color: Colors.white,
+                                    size: 30,
+                                  )
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
                   ),
-                  GridColumn(
-                    allowFiltering: true,
-                    width: 100,
-                    columnName: 'project_type',
-                    label: Center(
-                        child: Text('Project type',
-                            style: TextStyle(fontWeight: FontWeight.bold))),
-                  ),
-                  GridColumn(
-                    width: 100,
-                    columnName: 'project_date',
-                    label: Center(
-                        child: Text('Starting date',
-                            style: TextStyle(fontWeight: FontWeight.bold))),
-                  ),
-                  GridColumn(
-                    width: 100,
-                    columnName: 'project_review1',
-                    label: Center(
-                        child: Text('Review1',
-                            style: TextStyle(fontWeight: FontWeight.bold))),
-                  ),
-                  GridColumn(
-                    width: 100,
-                    columnName: 'project_review2',
-                    label: Center(
-                        child: Text('Review2',
-                            style: TextStyle(fontWeight: FontWeight.bold))),
-                  ),
-                  GridColumn(
-                    width: 100,
-                    columnName: 'project_review3',
-                    label: Center(
-                        child: Text('Review3',
-                            style: TextStyle(fontWeight: FontWeight.bold))),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                        left: 30, right: 30, top: 10, bottom: 10),
+                    child: GestureDetector(
+                      onTap: () {},
+                      child: Container(
+                        width: 500,
+                        height: 120,
+                        decoration: BoxDecoration(
+                            color: Color(0xFF004A61),
+                            borderRadius: BorderRadius.circular(10)),
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 82, right: 82, top: 40, bottom: 40),
+                              child: Row(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(right: 10),
+                                    child: Text(
+                                      "Main Project",
+                                      style: TextStyle(
+                                          fontSize: 22,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                  Icon(
+                                    Icons.computer,
+                                    color: Colors.white,
+                                    size: 30,
+                                  )
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
                   ),
                 ],
-                columnWidthMode: ColumnWidthMode.fill,
-              ),
-            ),
-    );
+              ));
   }
 }
 

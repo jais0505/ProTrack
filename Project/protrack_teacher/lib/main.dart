@@ -1,8 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-
 import 'package:protrack_teacher/Screens/login.dart';
-
 import 'package:protrack_teacher/firebase_options.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
