@@ -22,11 +22,33 @@ class _AbstractFormState extends State<AbstractForm> {
     try {
       String? url = await uploadFile();
       String projectTitle = _projectTitleController.text;
-      await supabase.from('tbl_project').insert({
+      await supabase.from('tbl_group').insert({
         'group_abstract': url,
         'project_title': projectTitle,
       });
-    } catch (e) {}
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            "Abstract Submitted:",
+            style: TextStyle(
+              color: Colors.white, // Text color
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          backgroundColor: Colors.green, // Background color
+          behavior: SnackBarBehavior.floating, // Floating style
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10), // Rounded corners
+          ),
+          margin: EdgeInsets.all(20), // Add margin around Snackbar
+          elevation: 6, // Add shadow effect
+          duration: Duration(seconds: 5), // Display duration
+        ),
+      );
+    } catch (e) {
+      print("Error submitting abstract:$e");
+    }
   }
 
   /// **📌 Function to Pick a File**
@@ -81,6 +103,7 @@ class _AbstractFormState extends State<AbstractForm> {
       );
 
       print("Uploaded File URL: $fileUrl");
+
       return fileUrl;
     } catch (e) {
       print("Error uploading file: $e");
@@ -157,7 +180,7 @@ class _AbstractFormState extends State<AbstractForm> {
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(5)),
                     ),
-                    onPressed: uploadFile, // Uploads the file when clicked
+                    onPressed: storeAbstract, // Uploads the file when clicked
                     child: Text(
                       'Submit',
                       style: TextStyle(
