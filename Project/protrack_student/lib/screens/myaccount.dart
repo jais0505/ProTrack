@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:protrack_student/main.dart';
+import 'package:protrack_student/screens/changepassword.dart';
+import 'package:protrack_student/screens/editprofile.dart';
 import 'package:protrack_student/screens/login.dart';
 
 class Account extends StatefulWidget {
@@ -29,7 +31,7 @@ class _AccountState extends State<Account> {
             .select(" *,tbl_year(*)")
             .eq("student_id", studentid)
             .single();
-        print("Response:$response");
+
         setState(() {
           Name = response['student_name'];
           photo = response['student_photo'];
@@ -73,8 +75,8 @@ class _AccountState extends State<Account> {
                     children: [
                       ClipOval(
                           child: Image.network(
-                              width: 100,
-                              height: 100,
+                              width: 115,
+                              height: 115,
                               fit: BoxFit.fill,
                               photo)),
                       SizedBox(
@@ -82,8 +84,65 @@ class _AccountState extends State<Account> {
                       ),
                       Text(
                         Name,
-                        style: TextStyle(fontSize: 25),
-                      )
+                        style: TextStyle(
+                            fontSize: 25,
+                            fontWeight: FontWeight.bold,
+                            color: const Color.fromARGB(255, 12, 47, 68)),
+                      ),
+                      Padding(
+                        padding:
+                            const EdgeInsets.only(left: 60, right: 60, top: 16),
+                        child: ElevatedButton.icon(
+                          style: ElevatedButton.styleFrom(
+                              backgroundColor: Color(0xFF004A61),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10)),
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 50, vertical: 8)),
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => Editprofile()));
+                          },
+                          label: Text(
+                            "Edit Profile",
+                            style: TextStyle(fontSize: 20, color: Colors.white),
+                          ),
+                          icon: Icon(
+                            Icons.edit,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 60, right: 60),
+                        child: ElevatedButton.icon(
+                          style: ElevatedButton.styleFrom(
+                              backgroundColor: Color(0xFF004A61),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10)),
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 20, vertical: 8)),
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => Changepassword( )));
+                          },
+                          label: Text(
+                            "Change Password",
+                            style: TextStyle(fontSize: 20, color: Colors.white),
+                          ),
+                          icon: Icon(
+                            Icons.change_circle,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ],
@@ -91,89 +150,82 @@ class _AccountState extends State<Account> {
             ),
             Padding(
               padding: const EdgeInsets.all(10.0),
-              child: Container(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding:
-                          const EdgeInsets.only(right: 200, top: 16, left: 16),
-                      child: Text(
-                        "Email",
-                        style: TextStyle(fontSize: 20),
-                      ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding:
+                        const EdgeInsets.only(right: 200, top: 10, left: 16),
+                    child: Text(
+                      "Email",
+                      style: TextStyle(fontSize: 20),
                     ),
-                    Padding(
-                      padding:
-                          const EdgeInsets.only(top: 10, left: 16, right: 16),
-                      child: TextField(
-                        controller: _emailController,
-                        decoration:
-                            InputDecoration(border: OutlineInputBorder()),
-                      ),
+                  ),
+                  Padding(
+                    padding:
+                        const EdgeInsets.only(top: 10, left: 16, right: 16),
+                    child: TextField(
+                      controller: _emailController,
+                      decoration: InputDecoration(border: OutlineInputBorder()),
                     ),
-                    Padding(
-                      padding:
-                          const EdgeInsets.only(right: 200, top: 16, left: 16),
-                      child: Text(
-                        "Phone No",
-                        style: TextStyle(fontSize: 20),
-                      ),
+                  ),
+                  Padding(
+                    padding:
+                        const EdgeInsets.only(right: 200, top: 16, left: 16),
+                    child: Text(
+                      "Phone No",
+                      style: TextStyle(fontSize: 20),
                     ),
-                    Padding(
-                      padding:
-                          const EdgeInsets.only(top: 5, left: 16, right: 16),
-                      child: TextField(
-                        controller: _phonenoController,
-                        decoration:
-                            InputDecoration(border: OutlineInputBorder()),
-                      ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 5, left: 16, right: 16),
+                    child: TextField(
+                      controller: _phonenoController,
+                      decoration: InputDecoration(border: OutlineInputBorder()),
                     ),
-                    Padding(
-                      padding:
-                          const EdgeInsets.only(right: 200, top: 16, left: 16),
-                      child: Text(
-                        "Year of study",
-                        style: TextStyle(fontSize: 20),
-                      ),
+                  ),
+                  Padding(
+                    padding:
+                        const EdgeInsets.only(right: 200, top: 16, left: 16),
+                    child: Text(
+                      "Year of study",
+                      style: TextStyle(fontSize: 20),
                     ),
-                    Padding(
-                      padding:
-                          const EdgeInsets.only(top: 5, left: 16, right: 16),
-                      child: TextField(
-                        controller: _yearController,
-                        decoration:
-                            InputDecoration(border: OutlineInputBorder()),
-                      ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 5, left: 16, right: 16),
+                    child: TextField(
+                      controller: _yearController,
+                      decoration: InputDecoration(border: OutlineInputBorder()),
                     ),
-                    Padding(
-                      padding:
-                          const EdgeInsets.only(left: 16, right: 16, top: 16),
-                      child: ElevatedButton.icon(
-                        onPressed: () {
-                          Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => LoginScreen()));
-                        },
-                        icon: Icon(Icons.logout),
-                        label: Text(
-                          "Logout",
-                          style: TextStyle(fontSize: 16),
-                        ),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.amber, // Logout button color
-                          foregroundColor: Colors.white, // Text color
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 132, vertical: 12),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
+                  ),
+                  Padding(
+                    padding:
+                        const EdgeInsets.only(left: 16, right: 16, top: 16),
+                    child: ElevatedButton.icon(
+                      onPressed: () {
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => LoginScreen()));
+                      },
+                      icon: Icon(Icons.logout),
+                      label: Text(
+                        "Logout",
+                        style: TextStyle(fontSize: 16),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.amber, // Logout button color
+                        foregroundColor: Colors.white, // Text color
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 132, vertical: 12),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
                         ),
                       ),
-                    )
-                  ],
-                ),
+                    ),
+                  )
+                ],
               ),
             ),
           ],

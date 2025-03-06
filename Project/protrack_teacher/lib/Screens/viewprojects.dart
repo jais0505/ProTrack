@@ -59,7 +59,7 @@ class _ViewProjectsState extends State<ViewProjects> {
                         width: 500,
                         height: 120,
                         decoration: BoxDecoration(
-                            color: Color(0xFF004A61),
+                            color: const Color.fromARGB(255, 12, 47, 68),
                             borderRadius: BorderRadius.circular(10)),
                         child: Column(
                           children: [
@@ -100,7 +100,7 @@ class _ViewProjectsState extends State<ViewProjects> {
                         width: 500,
                         height: 120,
                         decoration: BoxDecoration(
-                            color: Color(0xFF004A61),
+                            color: const Color.fromARGB(255, 12, 47, 68),
                             borderRadius: BorderRadius.circular(10)),
                         child: Column(
                           children: [

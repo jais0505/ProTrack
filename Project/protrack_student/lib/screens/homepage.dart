@@ -23,7 +23,7 @@ class _HomepageState extends State<Homepage> {
           .eq('project_status', 1)
           .single()
           .limit(1);
-      print("Response:$response");
+
       setState(() {
         projectType = response['project_type'];
         startDate = response['project_date'];
@@ -47,6 +47,7 @@ class _HomepageState extends State<Homepage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        iconTheme: IconThemeData(color: Colors.white),
         backgroundColor: const Color.fromARGB(255, 12, 47, 68),
         title: Text(
           "Home Page",

@@ -16,7 +16,7 @@ class _DashboardState extends State<Dashboard> {
   final List<Widget> items = [
     Homepage(),
     ProjectScreen(),
-    NotificationScreen(),
+    NotificationPage(),
     Account(),
   ];
 
@@ -26,10 +26,12 @@ class _DashboardState extends State<Dashboard> {
       body: items[_selectedIndex],
       // body: DashBoard(),
       bottomNavigationBar: BottomNavigationBar(
+          showUnselectedLabels: false,
+          showSelectedLabels: true,
           type: BottomNavigationBarType.fixed,
           selectedItemColor: const Color.fromARGB(255, 12, 47, 68),
           unselectedItemColor: Colors.grey,
-          currentIndex: 0,
+          currentIndex: _selectedIndex,
           onTap: (index) {
             setState(() {
               _selectedIndex = index;
