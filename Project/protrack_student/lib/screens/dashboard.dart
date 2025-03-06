@@ -23,18 +23,11 @@ class _DashboardState extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.blue,
-        title: Text("Hello, User!"),
-        actions: [
-          IconButton(onPressed: () {}, icon: Icon(Icons.notifications))
-        ],
-      ),
       body: items[_selectedIndex],
       // body: DashBoard(),
       bottomNavigationBar: BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
-          selectedItemColor: Colors.blue,
+          selectedItemColor: const Color.fromARGB(255, 12, 47, 68),
           unselectedItemColor: Colors.grey,
           currentIndex: 0,
           onTap: (index) {

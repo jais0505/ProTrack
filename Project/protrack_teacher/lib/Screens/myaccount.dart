@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:protrack_teacher/Screens/changepassword.dart';
 import 'package:protrack_teacher/Screens/editprofile.dart';
+import 'package:protrack_teacher/Screens/login.dart';
 import 'package:protrack_teacher/main.dart';
 
 class Account extends StatefulWidget {
@@ -14,7 +15,7 @@ class _AccountState extends State<Account> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _phonenoController = TextEditingController();
 
-  String Name = "";
+  String name = "";
   String photo = "";
 
   Future<void> fetchTeacherData() async {
@@ -28,7 +29,7 @@ class _AccountState extends State<Account> {
             .eq("teacher_id", teacherid)
             .single();
         setState(() {
-          Name = response['teacher_name'];
+          name = response['teacher_name'];
           photo = response['teacher_photo'];
           _emailController.text = response['teacher_email'];
           _phonenoController.text = response['teacher_contact'];
@@ -82,7 +83,7 @@ class _AccountState extends State<Account> {
                     child: Padding(
                       padding: const EdgeInsets.all(10.0),
                       child: Text(
-                        Name,
+                        name,
                         style: TextStyle(
                             fontSize: 25,
                             fontWeight: FontWeight.bold,
@@ -167,6 +168,31 @@ class _AccountState extends State<Account> {
                     decoration: InputDecoration(border: OutlineInputBorder()),
                     style: TextStyle(color: Color(0xFF004A61)),
                   ),
+                  SizedBox(
+                    height: 30,
+                  ),
+                  ElevatedButton.icon(
+                    onPressed: () {
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => LoginScreen()));
+                    },
+                    icon: Icon(Icons.logout),
+                    label: Text(
+                      "Logout",
+                      style: TextStyle(fontSize: 16),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.amber, // Logout button color
+                      foregroundColor: Colors.white, // Text color
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                  )
                 ],
               ),
             )

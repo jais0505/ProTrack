@@ -14,6 +14,8 @@ class AddstudentsScreen extends StatefulWidget {
 }
 
 class _AddstudentsScreenState extends State<AddstudentsScreen> {
+  bool passkey = true;
+  bool repasskey = true;
   final TextEditingController studentnameControllor = TextEditingController();
   final TextEditingController _emailEditingControllor = TextEditingController();
   final TextEditingController _passwordEditingController =
@@ -211,7 +213,17 @@ class _AddstudentsScreenState extends State<AddstudentsScreen> {
               decoration: InputDecoration(
                   hintText: 'Enter student password',
                   border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.password)),
+                  prefixIcon: Icon(Icons.password),
+                  suffixIcon: IconButton(
+                    onPressed: () {
+                      setState(() {
+                        passkey = !passkey;
+                      });
+                    },
+                    icon:
+                        Icon(passkey ? Icons.visibility_off : Icons.visibility),
+                  )),
+              obscureText: passkey,
             ),
           ),
           Padding(
@@ -221,7 +233,17 @@ class _AddstudentsScreenState extends State<AddstudentsScreen> {
               decoration: InputDecoration(
                   hintText: 'Re-enter password',
                   border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.password)),
+                  prefixIcon: Icon(Icons.password),
+                  suffixIcon: IconButton(
+                    onPressed: () {
+                      setState(() {
+                        repasskey = !repasskey;
+                      });
+                    },
+                    icon: Icon(
+                        repasskey ? Icons.visibility_off : Icons.visibility),
+                  )),
+              obscureText: repasskey,
             ),
           ),
           Padding(

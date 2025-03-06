@@ -12,7 +12,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: BoxDecoration(color: Color(0xFFF8F8F8)),
+        decoration: BoxDecoration(),
         child: Column(
           children: [
             Padding(
@@ -73,7 +73,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 shrinkWrap: true,
                 children: [
                   Card(
-                    color: Color(0xFFFFFFFF),
                     elevation: 5,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
@@ -81,21 +80,18 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Center(child: Text("1")),
                   ),
                   Card(
-                    color: Color(0xFFFFFFFF),
                     elevation: 5,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20)),
                     child: Center(child: Text("2")),
                   ),
                   Card(
-                    color: Color(0xFFFFFFFF),
                     elevation: 5,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20)),
                     child: Center(child: Text("3")),
                   ),
                   Card(
-                    color: Color(0xFFFFFFFF),
                     elevation: 5,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20)),

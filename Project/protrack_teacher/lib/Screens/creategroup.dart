@@ -24,13 +24,32 @@ class _CreateGroupState extends State<CreateGroup> {
     }
   }
 
-  Future<void> storeData() async {
+  Future<void> createGroup() async {
     try {
       String? student1 = selectedStudent1;
       String? student2 = selectedStudent2;
-      String groupStatus = " ";
-      await supabase.from('tbl_group').insert({'group_status': groupStatus});
-      await supabase.from('tbl_groupmember').insert({''});
+      final response = await supabase
+          .from('tbl_group')
+          .insert({})
+          .select('group_id')
+          .single();
+      int groupid = response['group_id'];
+      // print('Group id: $groupid');
+      // print("Student 1: $student1");
+      // print("Student 2: $student2");
+      List<Map<String, dynamic>> data = [
+        {'student_id': student1, 'group_id': groupid},
+        {'student_id': student2, 'group_id': groupid},
+      ];
+      // print('Data: $data');
+      await supabase.from('tbl_groupmember').insert(data);
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text(
+          "Group created",
+          style: TextStyle(color: Colors.white),
+        ),
+        backgroundColor: Colors.green,
+      ));
     } catch (e) {
       print("Error:$e");
     }
@@ -114,7 +133,7 @@ class _CreateGroupState extends State<CreateGroup> {
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(5))),
                       onPressed: () {
-                        storeData();
+                        createGroup();
                       },
                       child: Text(
                         'Submit',

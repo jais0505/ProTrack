@@ -35,36 +35,41 @@ class _ManagestudentsScreenState extends State<ManagestudentsScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(left: 20, top: 50),
-            child: Text(
-              "Manage Students",
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(left: 20, top: 50),
+              child: Text(
+                "Manage Students",
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
             ),
-          ),
-          ListView.builder(
-            shrinkWrap: true,
-            itemCount: _studentList.length,
-            itemBuilder: (context, index) {
-              final students = _studentList[index];
-              return ListTile(
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => StudentProfile(student: students),
-                      ));
-                },
-                leading: CircleAvatar(
-                  backgroundImage: NetworkImage(students['student_photo']),
-                ),
-                title: Text(students['student_name']),
-              );
-            },
-          ),
-        ],
+            ListView.builder(
+              shrinkWrap: true,
+              itemCount: _studentList.length,
+              itemBuilder: (context, index) {
+                final students = _studentList[index];
+                return ListTile(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              StudentProfile(student: students),
+                        ));
+                  },
+                  leading: CircleAvatar(
+                    radius: 25,
+                    backgroundImage:
+                        NetworkImage(students['student_photo'] ?? ""),
+                  ),
+                  title: Text(students['student_name']),
+                );
+              },
+            ),
+          ],
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
