@@ -58,7 +58,17 @@ class _YearScreenState extends State<YearScreen>
 
   Future<void> deleteyear(int yearId) async {
     try {
-      await supabase.from('tbl_year').delete().eq('id', yearId);
+      await supabase.from('tbl_year').delete().eq('year_id', yearId);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'Year deleted',
+            style: TextStyle(color: Colors.white),
+          ),
+          backgroundColor: Colors.green,
+        ),
+      );
+      fetchYear();
     } catch (e) {
       print("ERROR DELETING YEAR:$e");
     }
@@ -166,15 +176,58 @@ class _YearScreenState extends State<YearScreen>
               child: Column(
                 children: [
                   Text("Year Data"),
-                  ListView.builder(
-                      itemCount: _year.length,
-                      shrinkWrap: true,
-                      itemBuilder: (context, index) {
-                        final yeardata = _year[index];
-                        return ListTile(
-                          title: Text(yeardata['year_name']),
-                        );
-                      })
+                  Container(
+                    decoration: BoxDecoration(
+                        border: Border.all(color: Colors.grey, width: 1),
+                        borderRadius: BorderRadius.circular(6),
+                        color: Colors.white),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: DataTable(
+                        dividerThickness: 2,
+                        dataRowHeight: 50.0,
+                        headingRowHeight: 60.0,
+                        columns: [
+                          DataColumn(
+                              label: Text("Sl.No",
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ))),
+                          DataColumn(
+                              label: Text("Year",
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ))),
+                          DataColumn(
+                              label: Text("Delete",
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ))),
+                        ],
+                        rows: _year.asMap().entries.map((entry) {
+                          print(entry.value);
+                          return DataRow(cells: [
+                            DataCell(Text(
+                              (entry.key + 1).toString(),
+                            )),
+                            DataCell(Text(entry.value['year_name'])),
+                            DataCell(
+                              IconButton(
+                                onPressed: () {
+                                  deleteyear(entry.value['year_id']);
+                                },
+                                icon:
+                                    const Icon(Icons.delete, color: Colors.red),
+                              ),
+                            ),
+                          ]);
+                        }).toList(),
+                      ),
+                    ),
+                  )
                 ],
               ),
             ),

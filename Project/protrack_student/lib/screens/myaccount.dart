@@ -132,7 +132,8 @@ class _AccountState extends State<Account> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => Changepassword()));
+                                    builder: (context) =>
+                                        ChangepasswordScreen()));
                           },
                           label: Text(
                             "Change Password",
