@@ -3,6 +3,7 @@ import 'package:protrack_student/main.dart';
 import 'package:protrack_student/screens/changepassword.dart';
 import 'package:protrack_student/screens/editprofile.dart';
 import 'package:protrack_student/screens/login.dart';
+import 'package:protrack_student/screens/newlogin.dart';
 
 class Account extends StatefulWidget {
   const Account({super.key});
@@ -131,7 +132,7 @@ class _AccountState extends State<Account> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => Changepassword( )));
+                                    builder: (context) => Changepassword()));
                           },
                           label: Text(
                             "Change Password",
@@ -207,7 +208,7 @@ class _AccountState extends State<Account> {
                         Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => LoginScreen()));
+                                builder: (context) => NewLoginPage()));
                       },
                       icon: Icon(Icons.logout),
                       label: Text(

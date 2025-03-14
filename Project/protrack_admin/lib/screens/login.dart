@@ -124,7 +124,7 @@ class _AdminLoginState extends State<AdminLogin> {
                               hintStyle: TextStyle(fontSize: 11),
                               hintText: 'Enter your password',
                               border: UnderlineInputBorder(),
-                              prefixIcon: Icon(Icons.password),
+                              prefixIcon: Icon(Icons.lock_outline),
                               suffixIcon: IconButton(
                                 icon: Icon(passkey
                                     ? Icons.visibility_off

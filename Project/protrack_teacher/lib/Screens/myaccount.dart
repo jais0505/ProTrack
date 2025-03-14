@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:protrack_teacher/Screens/NewLogin.dart';
 import 'package:protrack_teacher/Screens/changepassword.dart';
 import 'package:protrack_teacher/Screens/editprofile.dart';
 import 'package:protrack_teacher/Screens/login.dart';
@@ -176,7 +177,7 @@ class _AccountState extends State<Account> {
                       Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => LoginScreen()));
+                              builder: (context) => NewLoginPage()));
                     },
                     icon: Icon(Icons.logout),
                     label: Text(

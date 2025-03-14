@@ -1,10 +1,8 @@
 import 'package:cherry_toast/cherry_toast.dart';
 import 'package:cherry_toast/resources/arrays.dart';
 import 'package:flutter/material.dart';
-
-import 'package:protrack_teacher/Screens/dashboard.dart';
-import 'package:protrack_teacher/main.dart';
-import 'package:protrack_teacher/services/auth_service.dart';
+import 'package:protrack_student/main.dart';
+import 'package:protrack_student/screens/dashboard.dart';
 
 class NewLoginPage extends StatefulWidget {
   const NewLoginPage({Key? key}) : super(key: key);
@@ -17,12 +15,9 @@ class _NewLoginPageState extends State<NewLoginPage> {
   bool passkey = true;
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
-  final AuthService _authService = AuthService();
 
   Future<void> signIn() async {
     try {
-      await _authService.storeCredentials(
-          _emailController.text, _passwordController.text);
       await supabase.auth.signInWithPassword(
           password: _passwordController.text, email: _emailController.text);
 
