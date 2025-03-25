@@ -63,6 +63,7 @@ class _ChangepasswordState extends State<Changepassword> {
           backgroundColor: Colors.green,
         ),
       );
+      Navigator.pop(context);
     } catch (e) {
       print("Error: $e");
     }

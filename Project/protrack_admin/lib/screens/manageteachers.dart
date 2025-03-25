@@ -1,6 +1,8 @@
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:cherry_toast/cherry_toast.dart';
+import 'package:cherry_toast/resources/arrays.dart';
 import 'package:flutter/material.dart';
 
 import 'package:protrack_admin/main.dart';
@@ -15,6 +17,8 @@ class TeacherScreen extends StatefulWidget {
 
 class _TeacherScreenState extends State<TeacherScreen>
     with SingleTickerProviderStateMixin {
+  bool passkey = true;
+  bool repasskey = true;
   bool _isFormVisible = false;
 
   final Duration _animationDuration = const Duration(milliseconds: 300);
@@ -22,8 +26,12 @@ class _TeacherScreenState extends State<TeacherScreen>
   final TextEditingController _emailEditingController = TextEditingController();
   final TextEditingController _passwordEditingController =
       TextEditingController();
+  final TextEditingController _repasswordEditingController =
+      TextEditingController();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _contactController = TextEditingController();
+
+  List<Map<String, dynamic>> _teacherList = [];
 
   PlatformFile? pickedImage;
 
@@ -41,13 +49,26 @@ class _TeacherScreenState extends State<TeacherScreen>
 
   Future<void> register() async {
     try {
-      final auth = await supabase.auth.signUp(
-          password: _passwordEditingController.text,
-          email: _emailEditingController.text);
-      final uid = auth.user!.id;
-      if (uid.isNotEmpty || uid != "") {
-        storeData(uid);
+      if (_passwordEditingController.text ==
+          _repasswordEditingController.text) {
+        final auth = await supabase.auth.signUp(
+            password: _passwordEditingController.text,
+            email: _emailEditingController.text);
+        final uid = auth.user!.id;
+        if (uid.isNotEmpty || uid != "") {
+          storeData(uid);
+        } else {
+          CherryToast.error(
+                  description: Text("password and re-entered password mismatch",
+                      style: TextStyle(color: Colors.black)),
+                  animationType: AnimationType.fromRight,
+                  animationDuration: Duration(milliseconds: 1000),
+                  autoDismiss: true)
+              .show(context);
+          print("Password and re-entered password not same");
+        }
       }
+      FetchTeachers();
     } catch (e) {
       print("Authentication Error: $e");
     }
@@ -81,6 +102,7 @@ class _TeacherScreenState extends State<TeacherScreen>
         _passwordEditingController.clear();
         _emailEditingController.clear();
         _contactController.clear();
+        _repasswordEditingController.clear();
         setState(() {
           pickedImage = null;
         });
@@ -108,6 +130,24 @@ class _TeacherScreenState extends State<TeacherScreen>
       print("Error photo upload: $e");
       return null;
     }
+  }
+
+  Future<void> FetchTeachers() async {
+    try {
+      final response = await supabase.from('tbl_teacher').select();
+      setState(() {
+        _teacherList = response;
+      });
+    } catch (e) {
+      print("Error fetching teachers list:$e");
+    }
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    FetchTeachers();
   }
 
   @override
@@ -246,10 +286,44 @@ class _TeacherScreenState extends State<TeacherScreen>
                               child: TextFormField(
                                 controller: _passwordEditingController,
                                 decoration: InputDecoration(
-                                  hintText: 'Teacher password',
+                                  hintText: 'Enter teacher password',
                                   border: OutlineInputBorder(),
                                   prefixIcon: Icon(Icons.password),
+                                  suffixIcon: IconButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        passkey = !passkey;
+                                      });
+                                    },
+                                    icon: Icon(passkey
+                                        ? Icons.visibility_off
+                                        : Icons.visibility),
+                                  ),
                                 ),
+                                obscureText: passkey,
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 40, right: 40, top: 10, bottom: 10),
+                              child: TextFormField(
+                                controller: _repasswordEditingController,
+                                decoration: InputDecoration(
+                                  hintText: 'Re-enter password',
+                                  border: OutlineInputBorder(),
+                                  prefixIcon: Icon(Icons.password),
+                                  suffixIcon: IconButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        passkey = !passkey;
+                                      });
+                                    },
+                                    icon: Icon(passkey
+                                        ? Icons.visibility_off
+                                        : Icons.visibility),
+                                  ),
+                                ),
+                                obscureText: passkey,
                               ),
                             ),
                             Padding(
@@ -281,6 +355,86 @@ class _TeacherScreenState extends State<TeacherScreen>
                   )
                 : Container(),
           ),
+          SizedBox(height: 30),
+          Text(
+            "Teachers List",
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          ),
+          SizedBox(
+            height: 5,
+          ),
+          Container(
+            decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey, width: 1),
+                borderRadius: BorderRadius.circular(6),
+                color: Colors.white),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: DataTable(
+                dividerThickness: 2,
+                dataRowHeight: 50.0,
+                headingRowHeight: 60.0,
+                columns: [
+                  DataColumn(
+                      label: Text("Sl.No",
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ))),
+                  DataColumn(
+                      label: Text("Teacher Name",
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ))),
+                  DataColumn(
+                      label: Text("Photo",
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ))),
+                  DataColumn(
+                      label: Text("Contact No",
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ))),
+                  DataColumn(
+                      label: Text("Mail id",
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ))),
+                ],
+                rows: _teacherList.asMap().entries.map((entry) {
+                  print(entry.value);
+                  return DataRow(cells: [
+                    DataCell(Text(
+                      (entry.key + 1).toString(),
+                    )),
+                    DataCell(Text(entry.value['teacher_name'])),
+                    DataCell(
+                      Image.network(
+                        entry.value[
+                            'teacher_photo'], // Assuming this is the image URL
+                        width: 40, // Adjust width
+                        height: 40, // Adjust height
+                        fit: BoxFit.cover, // Adjust how the image fits
+                        errorBuilder: (context, error, stackTrace) {
+                          return Icon(Icons.person,
+                              size: 50,
+                              color:
+                                  Colors.grey); // Default icon if image fails
+                        },
+                      ),
+                    ),
+                    DataCell(Text(entry.value['teacher_contact'])),
+                    DataCell(Text(entry.value['teacher_email'])),
+                  ]);
+                }).toList(),
+              ),
+            ),
+          )
         ],
       ),
     );

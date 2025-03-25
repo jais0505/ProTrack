@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:protrack_admin/components/appbar.dart';
 import 'package:protrack_admin/components/sidebar.dart';
-import 'package:protrack_admin/screens/managefiletype.dart';
 import 'package:protrack_admin/screens/manageproject.dart';
 import 'package:protrack_admin/screens/managetechnology.dart';
 import 'package:protrack_admin/screens/manageyear.dart';
@@ -23,7 +22,6 @@ class _AdminHomeState extends State<AdminHome> {
     TeacherScreen(),
     YearScreen(),
     TechnologyScreen(),
-    FileTypeScreen(),
     ProjectScreen(),
   ];
 

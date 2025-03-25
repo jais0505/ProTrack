@@ -20,10 +20,32 @@ class _MainProjectScreenState extends State<MainProjectScreen> {
         ),
         backgroundColor: const Color.fromARGB(255, 12, 47, 68),
       ),
-      body: Column(
-        children: [
-          Text("Main Project Screeen"),
-        ],
+      body: Padding(
+        padding: const EdgeInsets.only(left: 16, right: 10),
+        child: Column(
+          children: [
+            SizedBox(
+              height: 8,
+            ),
+            Align(
+              alignment: Alignment.bottomLeft,
+              child: Text(
+                "Project title: ",
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Align(
+              alignment: Alignment.bottomLeft,
+              child: Text(
+                "Group guide: ",
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

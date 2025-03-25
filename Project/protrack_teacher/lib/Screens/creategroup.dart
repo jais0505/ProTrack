@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:protrack_teacher/Screens/miniproject.dart';
 import 'package:protrack_teacher/main.dart';
 
 class CreateGroup extends StatefulWidget {
@@ -50,6 +51,8 @@ class _CreateGroupState extends State<CreateGroup> {
         ),
         backgroundColor: Colors.green,
       ));
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => Miniproject()));
     } catch (e) {
       print("Error:$e");
     }

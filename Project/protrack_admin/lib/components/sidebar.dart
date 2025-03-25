@@ -10,22 +10,22 @@ class SideBar extends StatefulWidget {
 }
 
 class _SideBarState extends State<SideBar> {
+  int _selectedIndex = 0; // Track selected index
+
   final List<String> pages = [
     "View Students",
     "Manage Teachers",
     "Manage Year",
     "Manage Technology",
-    "Manage File Type",
     "Manage Project",
   ];
+
   final List<IconData> icons = [
     Icons.school,
     Icons.person_3_outlined,
     Icons.date_range,
     Icons.terminal,
-    Icons.file_copy,
-    Icons.computer // Icon for "Profile"
-    // Icon for "Manage Faculty"
+    Icons.computer,
   ];
 
   @override
@@ -51,19 +51,43 @@ class _SideBarState extends State<SideBar> {
                 ),
               ),
               ListView.builder(
-                  padding: const EdgeInsets.only(top: 10, left: 5),
-                  shrinkWrap: true,
-                  itemCount: pages.length,
-                  itemBuilder: (context, index) {
-                    return ListTile(
+                padding: const EdgeInsets.only(top: 16, left: 5),
+                shrinkWrap: true,
+                itemCount: pages.length,
+                itemBuilder: (context, index) {
+                  bool isSelected = index == _selectedIndex;
+                  return Container(
+                    color: isSelected
+                        ? const Color.fromARGB(255, 238, 239, 243)
+                        : Colors.transparent, // White background when selected
+                    child: ListTile(
                       onTap: () {
+                        setState(() {
+                          _selectedIndex = index;
+                        });
                         widget.onItemSelected(index);
                       },
-                      leading: Icon(icons[index], color: Colors.white),
-                      title: Text(pages[index],
-                          style: TextStyle(color: Colors.white, fontSize: 12)),
-                    );
-                  }),
+                      leading: Icon(
+                        icons[index],
+                        color: isSelected
+                            ? Color.fromARGB(255, 15, 23,
+                                42) // Dark icon color when selected
+                            : Colors.white, // Default white color
+                      ),
+                      title: Text(
+                        pages[index],
+                        style: TextStyle(
+                          color: isSelected
+                              ? Color.fromARGB(255, 15, 23,
+                                  42) // Dark text color when selected
+                              : Colors.white, // Default white color
+                          fontSize: 12,
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
             ],
           ),
           Padding(

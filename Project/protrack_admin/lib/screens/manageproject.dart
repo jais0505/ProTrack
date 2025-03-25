@@ -31,20 +31,28 @@ class _ProjectScreenState extends State<ProjectScreen>
       String review1 = projectreview1Controller.text;
       String review2 = projectreview1Controller.text;
       String review3 = projectreview1Controller.text;
-      await supabase.from('tbl_project').insert({
-        'project_type': _type,
-        'project_date': date,
-        'project_review1': review1,
-        'project_review2': review2,
-        'project_review3': review3,
-      });
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text(
-          "Project details added",
-          style: TextStyle(color: Colors.white),
-        ),
-        backgroundColor: Colors.green,
-      ));
+      final resonse =
+          await supabase.from('tbl_project').count().eq('project_status', 0);
+      if (resonse > 0) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text("Project Already Exist")));
+      } else {
+        await supabase.from('tbl_project').insert({
+          'project_type': _type,
+          'project_date': date,
+          'project_review1': review1,
+          'project_review2': review2,
+          'project_review3': review3,
+        });
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text(
+            "Project details added",
+            style: TextStyle(color: Colors.white),
+          ),
+          backgroundColor: Colors.green,
+        ));
+      }
+
       print("Project data inserted");
     } catch (e) {
       print("ERROR INSERTING PROJECT DETAILS:$e");
@@ -62,11 +70,41 @@ class _ProjectScreenState extends State<ProjectScreen>
     }
   }
 
+  Future<void> updateStatus(int id) async {
+    try {
+      await supabase
+          .from('tbl_project')
+          .update({'project_status': 1}).eq("project_id", id);
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text(
+          "Project finished",
+          style: TextStyle(color: Colors.white),
+        ),
+        backgroundColor: Colors.green,
+      ));
+    } catch (e) {}
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     fetchProjectdata();
+  }
+
+  Future<void> _selectDate(
+      BuildContext context, TextEditingController controller) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2101),
+    );
+    if (picked != null) {
+      setState(() {
+        controller.text = "${picked.day}/${picked.month}/${picked.year}";
+      });
+    }
   }
 
   @override
@@ -179,6 +217,10 @@ class _ProjectScreenState extends State<ProjectScreen>
                                     height: 10,
                                   ),
                                   TextFormField(
+                                    readOnly:
+                                        true, // Makes the field non-editable directly
+                                    onTap: () => _selectDate(
+                                        context, projectdateController),
                                     controller: projectdateController,
                                     decoration: InputDecoration(
                                       hintText: 'Projcet date',
@@ -190,6 +232,10 @@ class _ProjectScreenState extends State<ProjectScreen>
                                     height: 10,
                                   ),
                                   TextFormField(
+                                    readOnly:
+                                        true, // Makes the field non-editable directly
+                                    onTap: () => _selectDate(
+                                        context, projectreview1Controller),
                                     controller: projectreview1Controller,
                                     decoration: InputDecoration(
                                       hintText: 'Review1 date',
@@ -201,6 +247,10 @@ class _ProjectScreenState extends State<ProjectScreen>
                                     height: 10,
                                   ),
                                   TextFormField(
+                                    readOnly:
+                                        true, // Makes the field non-editable directly
+                                    onTap: () => _selectDate(
+                                        context, projectreview2Controller),
                                     controller: projectreview2Controller,
                                     decoration: InputDecoration(
                                       hintText: 'Review2 date',
@@ -212,6 +262,10 @@ class _ProjectScreenState extends State<ProjectScreen>
                                     height: 10,
                                   ),
                                   TextFormField(
+                                    readOnly:
+                                        true, // Makes the field non-editable directly
+                                    onTap: () => _selectDate(
+                                        context, projectreview3Controller),
                                     controller: projectreview3Controller,
                                     decoration: InputDecoration(
                                       hintText: 'Review3 date',
@@ -262,16 +316,62 @@ class _ProjectScreenState extends State<ProjectScreen>
               DataColumn(label: Text("Review1 date")),
               DataColumn(label: Text("Review2 date")),
               DataColumn(label: Text("Review3 date")),
+              DataColumn(label: Text("Project status")),
             ],
             rows: _projectdataList.asMap().entries.map((entry) {
               print(entry.value);
               return DataRow(cells: [
-                DataCell(Text((entry.key + 1).toString())),
-                DataCell(Text(entry.value['project_type'])),
-                DataCell(Text(entry.value['project_date'])),
-                DataCell(Text(entry.value['project_review1'])),
-                DataCell(Text(entry.value['project_review2'])),
-                DataCell(Text(entry.value['project_review3'])),
+                DataCell(SizedBox(
+                    width: 15,
+                    child: Text((entry.key + 1).toString()))), // Adjust width
+                DataCell(SizedBox(
+                    width: 80, child: Text(entry.value['project_type']))),
+                DataCell(SizedBox(
+                    width: 85, child: Text(entry.value['project_date']))),
+                DataCell(SizedBox(
+                    width: 85, child: Text(entry.value['project_review1']))),
+                DataCell(SizedBox(
+                    width: 85, child: Text(entry.value['project_review2']))),
+                DataCell(SizedBox(
+                    width: 85, child: Text(entry.value['project_review3']))),
+                DataCell(
+                  entry.value['project_status'] == 0
+                      ? Container(
+                          width: 100, // Adjust button width
+                          child: ElevatedButton(
+                            onPressed: () {
+                              print("Finish button pressed");
+                              updateStatus(entry.value['project_id']);
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.green, // Button color
+                              foregroundColor: Colors.white, // Text color
+                              shape: RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.circular(8), // Rounded corners
+                              ),
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 8),
+                              elevation: 3,
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(Icons.check,
+                                    size: 18, color: Colors.white),
+                                SizedBox(width: 6),
+                                Text(
+                                  "Finish",
+                                  style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ],
+                            ),
+                          ),
+                        )
+                      : Text("Finished"),
+                ),
               ]);
             }).toList(),
           )

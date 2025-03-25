@@ -103,6 +103,7 @@ class _AdminLoginState extends State<AdminLogin> {
                       child: Padding(
                         padding: const EdgeInsets.only(left: 22, right: 22),
                         child: TextFormField(
+                          controller: _emailController,
                           decoration: InputDecoration(
                               labelText: "Email",
                               labelStyle: TextStyle(fontSize: 12),
@@ -118,6 +119,7 @@ class _AdminLoginState extends State<AdminLogin> {
                       child: Padding(
                         padding: const EdgeInsets.only(left: 22, right: 22),
                         child: TextFormField(
+                          controller: _passwordController,
                           decoration: InputDecoration(
                               labelText: 'Password',
                               labelStyle: TextStyle(fontSize: 12),
@@ -139,20 +141,6 @@ class _AdminLoginState extends State<AdminLogin> {
                         ),
                       ),
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              right: 39, top: 10, bottom: 10),
-                          child: Text(
-                            'Forgot password?',
-                            style: TextStyle(
-                                color: Color(0xFF017AFF), fontSize: 12),
-                          ),
-                        ),
-                      ],
-                    ),
                     Padding(
                       padding: const EdgeInsets.all(10.0),
                       child: ElevatedButton(
@@ -163,12 +151,7 @@ class _AdminLoginState extends State<AdminLogin> {
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(5))),
                           onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const AdminHome(),
-                              ),
-                            );
+                            signIn();
                           },
                           child: Text(
                             'Login',

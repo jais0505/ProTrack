@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:protrack_student/main.dart';
 import 'package:protrack_student/screens/changepassword.dart';
 import 'package:protrack_student/screens/editprofile.dart';
-import 'package:protrack_student/screens/login.dart';
+
 import 'package:protrack_student/screens/newlogin.dart';
 
 class Account extends StatefulWidget {

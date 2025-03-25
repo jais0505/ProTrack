@@ -53,7 +53,7 @@ class _EditprofileState extends State<Editprofile> {
     }
   }
 
-  Future<void> UpdateData() async {
+  Future<void> updateData() async {
     try {
       await supabase.from('tbl_teacher').update({
         'teacher_name': _nameController.text,
@@ -69,6 +69,7 @@ class _EditprofileState extends State<Editprofile> {
         ),
       );
       fetchTeacherData();
+      Navigator.pop(context);
     } catch (e) {
       print("ERROR UPDATING PROFILE:$e");
     }
@@ -175,7 +176,7 @@ class _EditprofileState extends State<Editprofile> {
                           padding: EdgeInsets.symmetric(
                               horizontal: 40, vertical: 15)),
                       onPressed: () {
-                        UpdateData();
+                        updateData();
                       },
                       label: Text(
                         "Submit",

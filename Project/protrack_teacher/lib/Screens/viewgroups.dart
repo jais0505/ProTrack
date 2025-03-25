@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:protrack_teacher/Screens/grouppage.dart';
 import 'package:protrack_teacher/main.dart';
 
 class Viewgroups extends StatefulWidget {
@@ -37,32 +38,41 @@ class _ViewgroupsState extends State<Viewgroups> {
       appBar: AppBar(
         title: Text("Mini Project Groups"),
       ),
-      body: Column(
-        children: [
-          ListView.builder(
-            shrinkWrap: true,
-            itemCount: _groupList.length,
-            itemBuilder: (context, index) {
-              final groups = _groupList[index];
-              print(groups);
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            ListView.builder(
+              shrinkWrap: true,
+              itemCount: _groupList.length,
+              itemBuilder: (context, index) {
+                final groups = _groupList[index];
+                print(groups);
 
-              String stud1 =
-                  groups['tbl_groupmember'][0]['tbl_student']['student_name'];
+                String stud1 =
+                    groups['tbl_groupmember'][0]['tbl_student']['student_name'];
 
-              String stud2 =
-                  groups['tbl_groupmember'][1]['tbl_student']['student_name'];
-              return ListTile(
-                onTap: () {},
-                leading: Text((index + 1).toString()),
-                title: Text(groups['project_title'] ?? "Mini Project Group"),
-                subtitle: Text(
-                  '$stud1,$stud2',
-                  style: TextStyle(color: Colors.indigo),
-                ),
-              );
-            },
-          ),
-        ],
+                String stud2 =
+                    groups['tbl_groupmember'][1]['tbl_student']['student_name'];
+                return ListTile(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => GroupPage(
+                                  gid: groups['group_id'],
+                                )));
+                  },
+                  leading: Text((index + 1).toString()),
+                  title: Text(groups['project_title'] ?? "Mini Project Group"),
+                  subtitle: Text(
+                    '$stud1,$stud2',
+                    style: TextStyle(color: Colors.indigo),
+                  ),
+                );
+              },
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -40,6 +40,7 @@ class _AddstudentsScreenState extends State<AddstudentsScreen> {
     if (pickedFile != null) {
       setState(() {
         _image = File(pickedFile.path);
+        print("Image:$_image");
       });
     }
   }
@@ -91,7 +92,8 @@ class _AddstudentsScreenState extends State<AddstudentsScreen> {
       String contact = studentcontactControllor.text;
       String? year = selectedYear;
       String teacherId = supabase.auth.currentUser!.id;
-
+      final imageUrl = await uploadImage(uid);
+      print("URL IMAGE: $imageUrl");
       print("teacherId:$teacherId");
       await supabase.from('tbl_student').insert({
         'student_name': name,
@@ -100,20 +102,18 @@ class _AddstudentsScreenState extends State<AddstudentsScreen> {
         'student_contact': contact,
         'year_id': year,
         'student_id': uid,
-        'teacher_id': teacherId
+        'teacher_id': teacherId,
+        'student_photo': imageUrl,
       });
       studentnameControllor.clear();
       studentcontactControllor.clear();
       _emailEditingControllor.clear();
       _passwordEditingController.clear();
-      _repassEditingController.clear;
+      _repassEditingController.clear();
       setState(() {
         selectedYear = null;
         _image = null;
       });
-
-      final imageUrl = await uploadImage(uid);
-      await updateData(uid, imageUrl);
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text(
           "Student added",
@@ -121,24 +121,16 @@ class _AddstudentsScreenState extends State<AddstudentsScreen> {
         ),
         backgroundColor: Colors.green,
       ));
+      print('Image URL:$imageUrl');
     } catch (e) {
       print("Error inserting students data:$e");
     }
   }
 
-  Future<void> updateData(final uid, final url) async {
-    try {
-      await supabase
-          .from('tbl_student')
-          .update({'student_photo': url}).eq("student_id", uid);
-    } catch (e) {
-      print("Image updation failed: $e");
-    }
-  }
-
   Future<String?> uploadImage(String uid) async {
     try {
-      final fileName = 'user_$uid';
+      final fileName =
+          'Student-photo-$uid-${DateTime.now().millisecondsSinceEpoch}';
 
       await supabase.storage.from('student').upload(fileName, _image!);
 

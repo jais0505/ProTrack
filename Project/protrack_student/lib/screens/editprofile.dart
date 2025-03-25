@@ -17,7 +17,7 @@ class _EditprofileState extends State<Editprofile> {
   final TextEditingController _contactController = TextEditingController();
 
   String photo = "";
-  String teacherid = "";
+  String studentid = "";
 
   File? _image;
   final ImagePicker _picker = ImagePicker();
@@ -33,18 +33,19 @@ class _EditprofileState extends State<Editprofile> {
 
   Future<void> fetchStudentData() async {
     try {
-      teacherid = supabase.auth.currentUser!.id;
-      if (teacherid != null) {
+      studentid = supabase.auth.currentUser!.id;
+      if (studentid != null) {
         final response = await supabase
             .from('tbl_student')
             .select()
-            .eq('student_id', teacherid)
+            .eq('student_id', studentid)
             .single();
         setState(() {
           photo = response['student_photo'];
           _nameController.text = response['student_name'];
-          _contactController.text = response['studnet_contact'];
+          _contactController.text = response['student_contact'];
         });
+        print("Contact:$response['student_contact]");
       } else {
         print("Error");
       }
@@ -53,12 +54,12 @@ class _EditprofileState extends State<Editprofile> {
     }
   }
 
-  Future<void> UpdateData() async {
+  Future<void> updateData() async {
     try {
       await supabase.from('tbl_student').update({
-        'studnet_name': _nameController.text,
+        'student_name': _nameController.text,
         'student_contact': _contactController.text
-      }).eq('stundet_id', teacherid);
+      }).eq('student_id', studentid);
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text(
@@ -69,6 +70,7 @@ class _EditprofileState extends State<Editprofile> {
         ),
       );
       fetchStudentData();
+      Navigator.pop(context);
     } catch (e) {
       print("ERROR UPDATING PROFILE:$e");
     }
@@ -175,7 +177,7 @@ class _EditprofileState extends State<Editprofile> {
                           padding: EdgeInsets.symmetric(
                               horizontal: 40, vertical: 15)),
                       onPressed: () {
-                        UpdateData();
+                        updateData();
                       },
                       label: Text(
                         "Submit",

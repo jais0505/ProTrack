@@ -1,17 +1,17 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:protrack_student/screens/miniproject.dart';
+
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:file_picker/file_picker.dart';
 
-class AbstractForm extends StatefulWidget {
-  const AbstractForm({super.key});
+class ResubmittAbstract extends StatefulWidget {
+  const ResubmittAbstract({super.key});
 
   @override
-  State<AbstractForm> createState() => _AbstractFormState();
+  State<ResubmittAbstract> createState() => _ResubmittAbstractState();
 }
 
-class _AbstractFormState extends State<AbstractForm> {
+class _ResubmittAbstractState extends State<ResubmittAbstract> {
   final TextEditingController _projectTitleController = TextEditingController();
   final supabase = Supabase.instance.client;
 
@@ -39,7 +39,7 @@ class _AbstractFormState extends State<AbstractForm> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            "Abstract Submitted:",
+            "Abstract Re-submitted:",
             style: TextStyle(
               color: Colors.white, // Text color
               fontSize: 16,
@@ -56,8 +56,7 @@ class _AbstractFormState extends State<AbstractForm> {
           duration: Duration(seconds: 5), // Display duration
         ),
       );
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => Miniproject()));
+      Navigator.pop(context, true);
     } catch (e) {
       print("Error submitting abstract:$e");
     }

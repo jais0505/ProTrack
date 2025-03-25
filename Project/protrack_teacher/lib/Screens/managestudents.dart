@@ -15,8 +15,11 @@ class _ManagestudentsScreenState extends State<ManagestudentsScreen>
   List<Map<String, dynamic>> _studentList = [];
 
   fetchStudetsData() async {
+    String? tid = supabase.auth.currentUser?.id;
+
     try {
-      final response = await supabase.from('tbl_student').select();
+      final response =
+          await supabase.from('tbl_student').select().eq('teacher_id', tid!);
       setState(() {
         _studentList = response;
       });
