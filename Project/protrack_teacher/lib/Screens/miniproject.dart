@@ -4,13 +4,15 @@ import 'package:protrack_teacher/Screens/viewgroups.dart';
 import 'package:protrack_teacher/main.dart';
 
 class Miniproject extends StatefulWidget {
-  const Miniproject({super.key});
+  final int pid;
+  const Miniproject({super.key, required this.pid});
 
   @override
   State<Miniproject> createState() => _MiniprojectState();
 }
 
 class _MiniprojectState extends State<Miniproject> {
+  bool isLoading = true;
   Map<String, dynamic> data = {};
   Future<void> fetchProjectData() async {
     try {
@@ -110,7 +112,9 @@ class _MiniprojectState extends State<Miniproject> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => CreateGroup()));
+                                builder: (context) => CreateGroup(
+                                      pid: widget.pid,
+                                    )));
                       },
                       child: Text(
                         'Create Group',
@@ -133,7 +137,9 @@ class _MiniprojectState extends State<Miniproject> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => Viewgroups()));
+                                builder: (context) => Viewgroups(
+                                      pid: widget.pid,
+                                    )));
                       },
                       child: Text(
                         'View Groups',

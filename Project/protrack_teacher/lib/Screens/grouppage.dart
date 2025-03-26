@@ -18,6 +18,7 @@ class _GroupPageState extends State<GroupPage> {
   bool isLoading = true;
 
   String projectTitle = "";
+  String projectCenter = "";
   String groupmember1 = "";
   String groupmember2 = "";
   String abstractURl = "";
@@ -26,20 +27,21 @@ class _GroupPageState extends State<GroupPage> {
 
   Future<void> fetchGroupDetails() async {
     try {
+      print("Group: ${widget.gid}");
       final response = await supabase
           .from('tbl_group')
           .select("*, tbl_groupmember(*, tbl_student(*))")
           .eq('group_id', widget.gid)
-          .maybeSingle()
-          .limit(1);
+          .single();
       setState(() {
-        groupDetails = response!;
-        projectTitle = response['project_title'];
+        groupDetails = response;
+        projectTitle = response['project_title'] ?? "No Title";
+        projectCenter = response['group_center'] ?? "Not selected";
         groupmember1 =
             response['tbl_groupmember'][0]['tbl_student']['student_name'];
         groupmember2 =
             response['tbl_groupmember'][1]['tbl_student']['student_name'];
-        abstractURl = response['group_abstract'];
+        abstractURl = response['group_abstract'] ?? "";
         isLoading = false;
         status = response['group_status'];
       });
@@ -172,6 +174,7 @@ class _GroupPageState extends State<GroupPage> {
         _buildDetailRow("📌 Project Title", projectTitle),
         _buildDetailRow("👤 Group Member 1", groupmember1),
         _buildDetailRow("👤 Group Member 2", groupmember2),
+        _buildDetailRow("🏢 Project Center", projectCenter),
       ],
     );
   }
@@ -199,23 +202,26 @@ class _GroupPageState extends State<GroupPage> {
     return Column(
       children: [
         status == 1
-            ? ElevatedButton.icon(
-                icon: Icon(Icons.remove_red_eye, color: Colors.white),
-                label: Text(
-                  'View Abstract',
-                  style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white),
-                ),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.amber,
-                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5),
+            ? Padding(
+                padding: const EdgeInsets.only(left: 20),
+                child: ElevatedButton.icon(
+                  icon: Icon(Icons.remove_red_eye, color: Colors.white),
+                  label: Text(
+                    'View Abstract',
+                    style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white),
                   ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.amber,
+                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                  ),
+                  onPressed: () => _launchPDF(abstractURl),
                 ),
-                onPressed: () => _launchPDF(abstractURl),
               )
             : SizedBox(),
         SizedBox(
@@ -305,7 +311,17 @@ class _GroupPageState extends State<GroupPage> {
                 },
               )
             : SizedBox(),
-        status == 9 ? Text("Project Completed") : SizedBox(),
+        status == 9
+            ? Text(
+                "Project completed successfully!",
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.green,
+                  letterSpacing: 1.2, // Slight spacing for readability
+                ),
+              )
+            : SizedBox(),
       ],
     );
   }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:protrack_student/main.dart';
 import 'package:protrack_student/screens/mainproject.dart';
 import 'package:protrack_student/screens/miniproject.dart';
 
@@ -10,6 +11,39 @@ class ProjectScreen extends StatefulWidget {
 }
 
 class _ProjectScreenState extends State<ProjectScreen> {
+  Future<void> checkProject() async {
+    try {
+      final response = await supabase
+          .from('tbl_project')
+          .select()
+          .eq('project_status', 0)
+          .order('createdAt', ascending: false)
+          .limit(1);
+
+      // Check if the response is empty (no rows returned)
+      if (response.isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("No project Started")),
+        );
+      } else {
+        // Since limit(1) is used, response will be a list with at most 1 item
+        final project = response[0]; // Access the first (and only) row
+        int id = project['project_id'];
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => Miniproject(id: id),
+          ),
+        );
+      }
+    } catch (e) {
+      print("Error: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("An error occurred: $e")),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -76,10 +110,7 @@ class _ProjectScreenState extends State<ProjectScreen> {
                             const EdgeInsets.only(top: 20, left: 22, right: 22),
                         child: GestureDetector(
                           onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => Miniproject()));
+                            checkProject();
                           },
                           child: Container(
                             width: 400,

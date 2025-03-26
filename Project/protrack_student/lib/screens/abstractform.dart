@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:protrack_student/screens/miniproject.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:file_picker/file_picker.dart';
 
@@ -13,6 +12,8 @@ class AbstractForm extends StatefulWidget {
 
 class _AbstractFormState extends State<AbstractForm> {
   final TextEditingController _projectTitleController = TextEditingController();
+  final TextEditingController _projectCenterController =
+      TextEditingController();
   final supabase = Supabase.instance.client;
 
   File? selectedFile; // Stores the selected file
@@ -31,9 +32,11 @@ class _AbstractFormState extends State<AbstractForm> {
           .limit(1);
       String? url = await uploadFile();
       String projectTitle = _projectTitleController.text;
+      String projectCenter = _projectCenterController.text;
       await supabase.from('tbl_group').update({
         'group_abstract': url,
         'project_title': projectTitle,
+        'group_center': projectCenter,
         'group_status': 1,
       }).eq('group_id', group!['group_id']);
       ScaffoldMessenger.of(context).showSnackBar(
@@ -56,8 +59,7 @@ class _AbstractFormState extends State<AbstractForm> {
           duration: Duration(seconds: 5), // Display duration
         ),
       );
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => Miniproject()));
+      Navigator.pop(context);
     } catch (e) {
       print("Error submitting abstract:$e");
     }
@@ -132,7 +134,7 @@ class _AbstractFormState extends State<AbstractForm> {
           padding: const EdgeInsets.all(20.0),
           child: Container(
             width: 500,
-            height: 450,
+            height: 500,
             decoration: BoxDecoration(
                 border: Border.all(color: Colors.black, width: 1.5),
                 borderRadius: BorderRadius.circular(10)),
@@ -151,6 +153,17 @@ class _AbstractFormState extends State<AbstractForm> {
                         hintText: 'Enter project title',
                         border: OutlineInputBorder(),
                         prefixIcon: Icon(Icons.computer)),
+                  ),
+                ),
+                Padding(
+                  padding:
+                      const EdgeInsets.only(left: 20, right: 20, bottom: 20),
+                  child: TextFormField(
+                    controller: _projectCenterController,
+                    decoration: InputDecoration(
+                        hintText: 'Enter project center',
+                        border: OutlineInputBorder(),
+                        prefixIcon: Icon(Icons.hub)),
                   ),
                 ),
                 ElevatedButton.icon(

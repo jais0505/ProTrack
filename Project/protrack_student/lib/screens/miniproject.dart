@@ -7,7 +7,8 @@ import 'package:protrack_student/screens/reviewresults.dart';
 import 'package:protrack_student/screens/viewabstract.dart';
 
 class Miniproject extends StatefulWidget {
-  const Miniproject({super.key});
+  final int id;
+  const Miniproject({super.key, required this.id});
 
   @override
   State<Miniproject> createState() => _MiniprojectState();
@@ -15,43 +16,64 @@ class Miniproject extends StatefulWidget {
 
 class _MiniprojectState extends State<Miniproject> {
   String projectTitle = "";
+  String projectCenter = "";
   String groupmember = "";
   String guide = "";
   int status = 0;
   int gid = 0;
+  bool isLoading = false;
+  bool isProjectCompleted = true;
   Future<void> fetchProject() async {
     try {
       final response = await supabase
           .from('tbl_groupmember')
-          .select("*,tbl_group(*)")
+          .select('tbl_group(*)')
           .eq('student_id', supabase.auth.currentUser!.id)
-          .single();
+          .eq('tbl_group.project_id', widget.id)
+          .order('created_at', ascending: false) // Get the latest
+          .limit(1) // Restrict to one row
+          .maybeSingle();
+      if (response != null) {
+        final groupId = response['tbl_group']['group_id'] as int;
+        print("Group ID: $groupId");
+        final response3 = await supabase
+            .from('tbl_groupmember')
+            .select(' *, tbl_student(*)')
+            .eq('group_id', groupId)
+            .neq('student_id', supabase.auth.currentUser!.id)
+            .single();
+        String member = response3['tbl_student']['student_name'];
+        final response2 = await supabase
+            .from('tbl_teacher')
+            .select()
+            .eq('teacher_id', response3['tbl_student']['teacher_id'])
+            .single();
+        String teacher = response2['teacher_name'];
+        setState(() {
+          projectTitle =
+              response['tbl_group']['project_title'] ?? "NOT ASSIGNED";
+          projectCenter =
+              response['tbl_group']['group_center'] ?? "NOT ASSIGNED";
+          guide = teacher;
+          groupmember = member;
+          status = response['tbl_group']['group_status'];
+          gid = groupId;
+          isLoading = false;
+          if (status == 9) {
+            isProjectCompleted = true;
+          }
+        });
+      } else {
+        print("No matching group found");
+        setState(() {
+          isLoading = false;
+        });
+      }
 
-      final response3 = await supabase
-          .from('tbl_groupmember')
-          .select(' *, tbl_student(*)')
-          .eq('group_id', response['group_id'])
-          .neq('student_id', supabase.auth.currentUser!.id)
-          .single();
-      String member = response3['tbl_student']['student_name'];
-      final response2 = await supabase
-          .from('tbl_teacher')
-          .select()
-          .eq('teacher_id', response3['tbl_student']['teacher_id'])
-          .single();
-      print("response:$response['tbl_group']");
-      String teacher = response2['teacher_name'];
-      setState(() {
-        projectTitle = response['tbl_group']['project_title'] ?? "NOT ASSIGNED";
-        guide = teacher;
-        groupmember = member;
-        status = response['tbl_group']['group_status'];
-        gid = response['tbl_group']['group_id'];
-      });
-      print("Status:$status");
-      print("Gid:$gid");
+      // print("Status:$status");
+      // print("Gid:$gid");
     } catch (e) {
-      print("Error fetching project title:$e");
+      print("Error fetching project:$e");
     }
   }
 
@@ -148,298 +170,363 @@ class _MiniprojectState extends State<Miniproject> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        foregroundColor: Colors.white,
-        title: Text(
-          "Mini Project",
-          style: TextStyle(
-              color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold),
-        ),
-        backgroundColor: const Color.fromARGB(255, 12, 47, 68),
-        actions: [
-          status >= 5
-              ? Padding(
-                  padding: const EdgeInsets.only(right: 8),
-                  child: TextButton.icon(
-                    icon: Icon(Icons.history, color: Colors.white), // Icon
-                    label: Text(
-                      'Review Results',
-                      style: TextStyle(color: Colors.white), // Text style
-                    ),
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => ReviewResults(
-                                    gid: gid,
-                                  )));
-                      print('Review Results button pressed');
-                    },
-                    style: TextButton.styleFrom(
-                      side: BorderSide(
-                          color: Colors.white,
-                          width: 2), // Border color and thickness
-                      shape: RoundedRectangleBorder(
-                          borderRadius:
-                              BorderRadius.circular(8)), // Rounded border
-                      padding: EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 8), // Button padding
-                    ),
-                  ),
-                )
-              : SizedBox()
-        ],
-      ),
-      body: Padding(
-        padding: const EdgeInsets.only(left: 16, right: 16),
-        child: Column(
-          children: [
-            SizedBox(
-              height: 10,
+    return isLoading
+        ? Scaffold(
+            body: Center(
+              child: CircularProgressIndicator(),
             ),
-            Align(
-              alignment: Alignment.bottomLeft,
-              child: Text(
-                "Project title: ${projectTitle}",
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          )
+        : Scaffold(
+            appBar: AppBar(
+              foregroundColor: Colors.white,
+              title: Text(
+                "Mini Project",
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold),
               ),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Align(
-              alignment: Alignment.bottomLeft,
-              child: Text(
-                "Group member: ${groupmember}",
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Align(
-              alignment: Alignment.bottomLeft,
-              child: Text(
-                "Project Guide: ${guide}",
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-            ),
-            SizedBox(
-              height: 15,
-            ),
-            Row(
-              children: [
-                status == 0
+              backgroundColor: const Color.fromARGB(255, 12, 47, 68),
+              actions: [
+                status >= 5
                     ? Padding(
-                        padding: const EdgeInsets.all(4),
-                        child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                                backgroundColor: Color(0xFF017AFF),
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 20, vertical: 15),
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(5))),
-                            onPressed: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => AbstractForm()));
-                            },
-                            child: Row(
-                              children: [
-                                Icon(
-                                  Icons.add,
-                                  size: 24,
-                                  color: Colors.white,
-                                ),
-                                Text(
-                                  'Add abstract',
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 18),
-                                ),
-                              ],
-                            )),
-                      )
-                    : SizedBox(),
-                status == 3
-                    ? Padding(
-                        padding: const EdgeInsets.all(4),
-                        child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                                backgroundColor: Color(0xFF017AFF),
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 20, vertical: 15),
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(5))),
-                            onPressed: () async {
-                              final result = await Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          ResubmittAbstract()));
-
-                              if (result == true) {
-                                fetchProject();
-                              }
-                            },
-                            child: Row(
-                              children: [
-                                Icon(
-                                  Icons.add,
-                                  size: 24,
-                                  color: Colors.white,
-                                ),
-                                Text(
-                                  'Re-submit abstract',
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 18),
-                                ),
-                              ],
-                            )),
-                      )
-                    : SizedBox(),
-                status == 1
-                    ? Padding(
-                        padding: const EdgeInsets.all(4),
-                        child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.green,
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 20, vertical: 15),
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(5))),
-                            onPressed: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          ViewAbstractPage()));
-                            },
-                            child: Row(
-                              children: [
-                                Icon(
-                                  Icons.remove_red_eye,
-                                  size: 24,
-                                  color: Colors.white,
-                                ),
-                                Text(
-                                  'View abstract',
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 18),
-                                ),
-                              ],
-                            )),
+                        padding: const EdgeInsets.only(right: 8),
+                        child: TextButton.icon(
+                          icon:
+                              Icon(Icons.history, color: Colors.white), // Icon
+                          label: Text(
+                            'Review Results',
+                            style: TextStyle(color: Colors.white), // Text style
+                          ),
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ReviewResults(
+                                          gid: gid,
+                                        )));
+                            print('Review Results button pressed');
+                          },
+                          style: TextButton.styleFrom(
+                            side: BorderSide(
+                                color: Colors.white,
+                                width: 2), // Border color and thickness
+                            shape: RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.circular(8)), // Rounded border
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 8, vertical: 8), // Button padding
+                          ),
+                        ),
                       )
                     : SizedBox()
               ],
             ),
-            SizedBox(
-              height: 30,
-            ),
-            Container(
-              height: 100,
-              width: 360,
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: getStatusBGColor(status), // Border color
-                  width: 2, // Border width
-                ),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Center(
-                child: Text(
-                  getStatus(status),
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: getStatusColor(status),
+            body: gid == 0
+                ? Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.group_off_sharp,
+                          size: 35,
+                        ),
+                        Text(
+                          "Group not created",
+                          style: TextStyle(fontSize: 16),
+                        ),
+                      ],
+                    ),
+                  )
+                : Padding(
+                    padding: const EdgeInsets.only(left: 16, right: 16),
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Align(
+                          alignment: Alignment.bottomLeft,
+                          child: Text(
+                            "Project title: ${projectTitle}",
+                            style: TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Align(
+                          alignment: Alignment.bottomLeft,
+                          child: Text(
+                            "Group member: ${groupmember}",
+                            style: TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Align(
+                          alignment: Alignment.bottomLeft,
+                          child: Text(
+                            "Project Guide: ${guide}",
+                            style: TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Align(
+                          alignment: Alignment.bottomLeft,
+                          child: Text(
+                            "Project Center: ${projectCenter}",
+                            style: TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 15,
+                        ),
+                        Row(
+                          children: [
+                            status == 0
+                                ? Padding(
+                                    padding: const EdgeInsets.all(4),
+                                    child: ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                            backgroundColor: Color(0xFF017AFF),
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 20, vertical: 15),
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(5))),
+                                        onPressed: () {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      AbstractForm()));
+                                        },
+                                        child: Row(
+                                          children: [
+                                            Icon(
+                                              Icons.add,
+                                              size: 24,
+                                              color: Colors.white,
+                                            ),
+                                            Text(
+                                              'Add abstract',
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 18),
+                                            ),
+                                          ],
+                                        )),
+                                  )
+                                : SizedBox(),
+                            status == 3
+                                ? Padding(
+                                    padding: const EdgeInsets.all(4),
+                                    child: ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                            backgroundColor: Color(0xFF017AFF),
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 20, vertical: 15),
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(5))),
+                                        onPressed: () async {
+                                          final result = await Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      ResubmittAbstract()));
+
+                                          if (result == true) {
+                                            fetchProject();
+                                          }
+                                        },
+                                        child: Row(
+                                          children: [
+                                            Icon(
+                                              Icons.add,
+                                              size: 24,
+                                              color: Colors.white,
+                                            ),
+                                            Text(
+                                              'Re-submit abstract',
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 18),
+                                            ),
+                                          ],
+                                        )),
+                                  )
+                                : SizedBox(),
+                            status == 1
+                                ? Padding(
+                                    padding: const EdgeInsets.all(4),
+                                    child: ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                            backgroundColor: Colors.green,
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 20, vertical: 15),
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(5))),
+                                        onPressed: () {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      ViewAbstractPage()));
+                                        },
+                                        child: Row(
+                                          children: [
+                                            Icon(
+                                              Icons.remove_red_eye,
+                                              size: 24,
+                                              color: Colors.white,
+                                            ),
+                                            Text(
+                                              'View abstract',
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 18),
+                                            ),
+                                          ],
+                                        )),
+                                  )
+                                : SizedBox()
+                          ],
+                        ),
+                        SizedBox(
+                          height: 30,
+                        ),
+                        Container(
+                          height: 100,
+                          width: 360,
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: getStatusBGColor(status), // Border color
+                              width: 2, // Border width
+                            ),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Center(
+                            child: Text(
+                              getStatus(status),
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: getStatusColor(status),
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 30,
+                        ),
+                        status == 2
+                            ? ElevatedButton(
+                                onPressed: () async {
+                                  addReview1();
+                                  print("Click triggered");
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.blue, // Button color
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 20, vertical: 12),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                ),
+                                child: Text(
+                                  "Proceed to Review 1 ",
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white),
+                                ),
+                              )
+                            : SizedBox(),
+                        status == 5
+                            ? ElevatedButton(
+                                onPressed: () async {
+                                  addReview2();
+                                  print("Click triggered");
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.blue, // Button color
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 20, vertical: 12),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                ),
+                                child: Text(
+                                  "Proceed to Review 2 ",
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white),
+                                ),
+                              )
+                            : SizedBox(),
+                        status == 7
+                            ? ElevatedButton(
+                                onPressed: () async {
+                                  addReview3();
+                                  print("Click triggered");
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.blue, // Button color
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 20, vertical: 12),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                ),
+                                child: Text(
+                                  "Proceed to Review 3 ",
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white),
+                                ),
+                              )
+                            : SizedBox(),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        status == 9
+                            ? Column(
+                                children: [
+                                  if (isProjectCompleted)
+                                    Text(
+                                      "Project completed successfully!",
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.green,
+                                        letterSpacing:
+                                            1.2, // Slight spacing for readability
+                                      ),
+                                    ),
+                                  // Other widgets...
+                                ],
+                              )
+                            : SizedBox()
+                      ],
+                    ),
                   ),
-                ),
-              ),
-            ),
-            SizedBox(
-              height: 30,
-            ),
-            status == 2
-                ? ElevatedButton(
-                    onPressed: () async {
-                      addReview1();
-                      print("Click triggered");
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue, // Button color
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
-                    child: Text(
-                      "Proceed to Review 1 ",
-                      style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white),
-                    ),
-                  )
-                : SizedBox(),
-            status == 5
-                ? ElevatedButton(
-                    onPressed: () async {
-                      addReview2();
-                      print("Click triggered");
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue, // Button color
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
-                    child: Text(
-                      "Proceed to Review 2 ",
-                      style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white),
-                    ),
-                  )
-                : SizedBox(),
-            status == 7
-                ? ElevatedButton(
-                    onPressed: () async {
-                      addReview3();
-                      print("Click triggered");
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue, // Button color
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
-                    child: Text(
-                      "Proceed to Review 3 ",
-                      style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white),
-                    ),
-                  )
-                : SizedBox()
-          ],
-        ),
-      ),
-    );
+          );
   }
 
   String getStatus(int st) {

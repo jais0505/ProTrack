@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:protrack_teacher/Screens/miniproject.dart';
 import 'package:protrack_teacher/main.dart';
 
 class CreateGroup extends StatefulWidget {
-  const CreateGroup({super.key});
+  final int pid;
+  const CreateGroup({super.key, required this.pid});
 
   @override
   State<CreateGroup> createState() => _CreateGroupState();
@@ -31,7 +31,7 @@ class _CreateGroupState extends State<CreateGroup> {
       String? student2 = selectedStudent2;
       final response = await supabase
           .from('tbl_group')
-          .insert({})
+          .insert({'project_id': widget.pid})
           .select('group_id')
           .single();
       int groupid = response['group_id'];
@@ -51,8 +51,7 @@ class _CreateGroupState extends State<CreateGroup> {
         ),
         backgroundColor: Colors.green,
       ));
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => Miniproject()));
+      Navigator.pop(context);
     } catch (e) {
       print("Error:$e");
     }

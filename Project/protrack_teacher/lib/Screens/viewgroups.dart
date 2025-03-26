@@ -3,7 +3,8 @@ import 'package:protrack_teacher/Screens/grouppage.dart';
 import 'package:protrack_teacher/main.dart';
 
 class Viewgroups extends StatefulWidget {
-  const Viewgroups({super.key});
+  final int pid;
+  const Viewgroups({super.key, required this.pid});
 
   @override
   State<Viewgroups> createState() => _ViewgroupsState();
@@ -15,7 +16,8 @@ class _ViewgroupsState extends State<Viewgroups> {
     try {
       final response = await supabase
           .from('tbl_group')
-          .select(" *, tbl_groupmember(*, tbl_student(*))");
+          .select(" *, tbl_groupmember(*, tbl_student(*))")
+          .eq('project_id', widget.pid);
       print(response);
       setState(() {
         _groupList = response;
@@ -27,7 +29,6 @@ class _ViewgroupsState extends State<Viewgroups> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     fetchgroups();
   }

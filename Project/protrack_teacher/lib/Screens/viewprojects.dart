@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:protrack_teacher/Screens/mainproject.dart';
 import 'package:protrack_teacher/Screens/miniproject.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import 'package:protrack_teacher/main.dart'; // Ensure Supabase instance is imported
@@ -37,6 +38,39 @@ class _ViewProjectsState extends State<ViewProjects> {
     }
   }
 
+  Future<void> checkProject() async {
+    try {
+      final response = await supabase
+          .from('tbl_project')
+          .select()
+          .eq('project_status', 0)
+          .order('createdAt', ascending: false)
+          .limit(1);
+
+      // Check if the response is empty (no rows returned)
+      if (response.isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("No project Started")),
+        );
+      } else {
+        // Since limit(1) is used, response will be a list with at most 1 item
+        final project = response[0]; // Access the first (and only) row
+        int id = project['project_id'];
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => Miniproject(pid: id),
+          ),
+        );
+      }
+    } catch (e) {
+      print("Error: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("An error occurred: $e")),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,10 +84,7 @@ class _ViewProjectsState extends State<ViewProjects> {
                         left: 30, right: 30, top: 10, bottom: 10),
                     child: GestureDetector(
                       onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => Miniproject()));
+                        checkProject();
                       },
                       child: Container(
                         width: 500,
@@ -95,7 +126,12 @@ class _ViewProjectsState extends State<ViewProjects> {
                     padding: const EdgeInsets.only(
                         left: 30, right: 30, top: 10, bottom: 10),
                     child: GestureDetector(
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => Mainproject()));
+                      },
                       child: Container(
                         width: 500,
                         height: 120,
