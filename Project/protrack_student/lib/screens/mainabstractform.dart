@@ -5,7 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:protrack_student/main.dart';
 
 class MainAbstract extends StatefulWidget {
-  const MainAbstract({super.key});
+  final int pid;
+  const MainAbstract({super.key, required this.pid});
 
   @override
   State<MainAbstract> createState() => _MainAbstractState();
@@ -37,6 +38,8 @@ class _MainAbstractState extends State<MainAbstract> {
         'mainproject_title': projectTitle,
         'mainproject_center': projectCenter,
         'technology_id': tech,
+        'mainproject_status': 1,
+        'project_id': widget.pid
       });
       _projectCenterController.clear;
       _projectTitleController.clear;

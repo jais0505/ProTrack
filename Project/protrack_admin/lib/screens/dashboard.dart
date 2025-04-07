@@ -4,6 +4,7 @@ import 'package:protrack_admin/components/sidebar.dart';
 import 'package:protrack_admin/screens/manageproject.dart';
 import 'package:protrack_admin/screens/managetechnology.dart';
 import 'package:protrack_admin/screens/manageyear.dart';
+import 'package:protrack_admin/screens/report.dart';
 import 'package:protrack_admin/screens/viewstudents.dart';
 import 'package:protrack_admin/screens/manageteachers.dart';
 
@@ -23,6 +24,7 @@ class _AdminHomeState extends State<AdminHome> {
     YearScreen(),
     TechnologyScreen(),
     ProjectScreen(),
+    ReportPage()
   ];
 
   void onSidebarItemTapped(int index) {

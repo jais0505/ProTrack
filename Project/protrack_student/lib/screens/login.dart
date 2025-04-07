@@ -29,7 +29,7 @@ class _LoginScreenState extends State<LoginScreen> {
     } catch (e) {
       print("Error occur in login:$e");
       CherryToast.error(
-              description: Text("No user found for that email.",
+              description: Text("Invalid user name or password",
                   style: TextStyle(color: Colors.black)),
               animationType: AnimationType.fromRight,
               animationDuration: Duration(milliseconds: 1000),

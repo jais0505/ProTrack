@@ -18,6 +18,7 @@ class _SideBarState extends State<SideBar> {
     "Manage Year",
     "Manage Technology",
     "Manage Project",
+    "Report",
   ];
 
   final List<IconData> icons = [
@@ -26,6 +27,7 @@ class _SideBarState extends State<SideBar> {
     Icons.date_range,
     Icons.terminal,
     Icons.computer,
+    Icons.summarize
   ];
 
   @override
