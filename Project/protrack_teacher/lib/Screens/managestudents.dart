@@ -44,7 +44,7 @@ class _ManagestudentsScreenState extends State<ManagestudentsScreen>
             Padding(
               padding: const EdgeInsets.only(left: 20, top: 50),
               child: Text(
-                "Manage Students",
+                "View Students",
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
             ),
