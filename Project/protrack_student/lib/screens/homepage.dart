@@ -20,7 +20,7 @@ class _HomepageState extends State<Homepage> {
       final response = await supabase
           .from('tbl_project')
           .select()
-          .eq('project_status', 1)
+          .eq('project_status', 0)
           .single()
           .limit(1);
 

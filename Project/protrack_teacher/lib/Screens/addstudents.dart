@@ -14,6 +14,8 @@ class AddstudentsScreen extends StatefulWidget {
 }
 
 class _AddstudentsScreenState extends State<AddstudentsScreen> {
+  final formKey = GlobalKey<FormState>();
+
   bool passkey = true;
   bool repasskey = true;
   final TextEditingController studentnameControllor = TextEditingController();
@@ -155,12 +157,15 @@ class _AddstudentsScreenState extends State<AddstudentsScreen> {
       appBar: AppBar(),
       body: ListView(
         children: [
-          Center(
-            child: Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Text(
-                "Add Student Form",
-                style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+          Form(
+            key: formKey,
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Text(
+                  "Add Student Form",
+                  style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                ),
               ),
             ),
           ),
@@ -182,6 +187,12 @@ class _AddstudentsScreenState extends State<AddstudentsScreen> {
             padding: const EdgeInsets.all(20.0),
             child: TextFormField(
               controller: studentnameControllor,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return "Please enter name";
+                }
+                return null;
+              },
               decoration: InputDecoration(
                   hintText: 'Enter student name',
                   border: OutlineInputBorder(),

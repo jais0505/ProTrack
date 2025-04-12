@@ -146,20 +146,24 @@ class _GroupPageState extends State<GroupPage> {
                     elevation: 2,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10)),
-                    child: Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min, // Reduces extra height
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          _buildInfoCard(),
-                          SizedBox(height: 15), // Reduced spacing
-                          _buildAbstractSection(),
-                          SizedBox(height: 15),
-                          groupDetails['group_status'] == 1
-                              ? _buildActionButtons()
-                              : SizedBox(),
-                        ],
+                    child: SizedBox(
+                      width: 400,
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Column(
+                          mainAxisSize:
+                              MainAxisSize.min, // Reduces extra height
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _buildInfoCard(),
+                            SizedBox(height: 15), // Reduced spacing
+                            _buildAbstractSection(),
+                            SizedBox(height: 15),
+                            groupDetails['group_status'] == 1
+                                ? _buildActionButtons()
+                                : SizedBox(),
+                          ],
+                        ),
                       ),
                     ),
                   ),

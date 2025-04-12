@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:protrack_admin/main.dart';
+import 'package:protrack_admin/screens/report.dart';
 
 class ProjectScreen extends StatefulWidget {
   const ProjectScreen({super.key});
@@ -308,72 +309,112 @@ class _ProjectScreenState extends State<ProjectScreen>
             "Project Details",
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
-          DataTable(
-            columns: [
-              DataColumn(label: Text("Sl.NO")),
-              DataColumn(label: Text("Project type")),
-              DataColumn(label: Text("Project date")),
-              DataColumn(label: Text("Review1 date")),
-              DataColumn(label: Text("Review2 date")),
-              DataColumn(label: Text("Review3 date")),
-              DataColumn(label: Text("Project status")),
-            ],
-            rows: _projectdataList.asMap().entries.map((entry) {
-              print(entry.value);
-              return DataRow(cells: [
-                DataCell(SizedBox(
-                    width: 15,
-                    child: Text((entry.key + 1).toString()))), // Adjust width
-                DataCell(SizedBox(
-                    width: 80, child: Text(entry.value['project_type']))),
-                DataCell(SizedBox(
-                    width: 85, child: Text(entry.value['project_date']))),
-                DataCell(SizedBox(
-                    width: 85, child: Text(entry.value['project_review1']))),
-                DataCell(SizedBox(
-                    width: 85, child: Text(entry.value['project_review2']))),
-                DataCell(SizedBox(
-                    width: 85, child: Text(entry.value['project_review3']))),
-                DataCell(
-                  entry.value['project_status'] == 0
-                      ? Container(
-                          width: 100, // Adjust button width
-                          child: ElevatedButton(
-                            onPressed: () {
-                              print("Finish button pressed");
-                              updateStatus(entry.value['project_id']);
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.green, // Button color
-                              foregroundColor: Colors.white, // Text color
-                              shape: RoundedRectangleBorder(
-                                borderRadius:
-                                    BorderRadius.circular(8), // Rounded corners
-                              ),
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 10, vertical: 8),
-                              elevation: 3,
-                            ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(Icons.check,
-                                    size: 18, color: Colors.white),
-                                SizedBox(width: 6),
-                                Text(
-                                  "Finish",
-                                  style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ],
-                            ),
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: DataTable(
+              columns: [
+                DataColumn(label: Text("Sl.NO")),
+                DataColumn(label: Text("Project type")),
+                DataColumn(label: Text("Project date")),
+                DataColumn(label: Text("Review1 date")),
+                DataColumn(label: Text("Review2 date")),
+                DataColumn(label: Text("Review3 date")),
+                DataColumn(label: Text("Report")),
+                DataColumn(label: Text("Project status")),
+              ],
+              rows: _projectdataList.asMap().entries.map((entry) {
+                print(entry.value);
+                return DataRow(cells: [
+                  DataCell(SizedBox(
+                      width: 10,
+                      child: Text((entry.key + 1).toString()))), // Adjust width
+                  DataCell(SizedBox(
+                      width: 80, child: Text(entry.value['project_type']))),
+                  DataCell(SizedBox(
+                      width: 85, child: Text(entry.value['project_date']))),
+                  DataCell(SizedBox(
+                      width: 85, child: Text(entry.value['project_review1']))),
+                  DataCell(SizedBox(
+                      width: 85, child: Text(entry.value['project_review2']))),
+                  DataCell(SizedBox(
+                      width: 85, child: Text(entry.value['project_review3']))),
+                  DataCell(Container(
+                    width: 90, // Adjust button width
+                    child: ElevatedButton(
+                      onPressed: () {
+                        print("Report button pressed");
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => ReportPage()),
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blue, // Button color
+                        foregroundColor: Colors.white, // Text color
+                        shape: RoundedRectangleBorder(
+                          borderRadius:
+                              BorderRadius.circular(8), // Rounded corners
+                        ),
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                        elevation: 3,
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(Icons.summarize_outlined,
+                              size: 18, color: Colors.white),
+                          SizedBox(width: 6),
+                          Text(
+                            "Report",
+                            style: TextStyle(
+                                fontSize: 14, fontWeight: FontWeight.bold),
                           ),
-                        )
-                      : Text("Finished"),
-                ),
-              ]);
-            }).toList(),
+                        ],
+                      ),
+                    ),
+                  )),
+                  DataCell(
+                    entry.value['project_status'] == 0
+                        ? Container(
+                            width: 100, // Adjust button width
+                            child: ElevatedButton(
+                              onPressed: () {
+                                print("Finish button pressed");
+                                updateStatus(entry.value['project_id']);
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.green, // Button color
+                                foregroundColor: Colors.white, // Text color
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(
+                                      8), // Rounded corners
+                                ),
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 10, vertical: 8),
+                                elevation: 3,
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(Icons.check,
+                                      size: 18, color: Colors.white),
+                                  SizedBox(width: 6),
+                                  Text(
+                                    "Finish",
+                                    style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          )
+                        : Text("Finished"),
+                  ),
+                ]);
+              }).toList(),
+            ),
           )
         ],
       ),

@@ -24,7 +24,6 @@ class _AdminHomeState extends State<AdminHome> {
     YearScreen(),
     TechnologyScreen(),
     ProjectScreen(),
-    ReportPage()
   ];
 
   void onSidebarItemTapped(int index) {
