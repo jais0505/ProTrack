@@ -72,14 +72,18 @@ class _MainReviewResultsState extends State<MainReviewResults> {
   }
 
   Future<void> fetchReview() async {
-    final response = await supabase
-        .from('tbl_review')
-        .select()
-        .eq('mainproject_id', widget.mid);
-    print(response);
-    setState(() {
-      _reviewList = response;
-    });
+    try {
+      final response = await supabase
+          .from('tbl_review')
+          .select()
+          .eq('mainproject_id', widget.mid);
+      print("Response:$response");
+      setState(() {
+        _reviewList = response;
+      });
+    } catch (e) {
+      print("Error fetching review details:$e");
+    }
   }
 
   @override

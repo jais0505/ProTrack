@@ -45,7 +45,7 @@ class _StudentPageState extends State<StudentPage> {
         abstractURl = response['mainproject_abstract'];
         status = response['mainproject_status'];
         mid = response['mainproject_id'];
-        certificateUrl = response["mainproject_certificate"];
+        certificateUrl = response["mainproject_certificate"] ?? "";
       });
       print("Status:$status");
     } catch (e) {

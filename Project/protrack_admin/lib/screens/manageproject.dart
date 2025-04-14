@@ -11,6 +11,7 @@ class ProjectScreen extends StatefulWidget {
 
 class _ProjectScreenState extends State<ProjectScreen>
     with SingleTickerProviderStateMixin {
+  int? status;
   bool _isFormVisible = false;
   final Duration _animationDuration = const Duration(milliseconds: 300);
   final TextEditingController projecttypeController = TextEditingController();
@@ -23,7 +24,56 @@ class _ProjectScreenState extends State<ProjectScreen>
       TextEditingController();
 
   String? _type = "";
+
   List<Map<String, dynamic>> _projectdataList = [];
+
+  void _showEditDialog(Map<String, dynamic> project) {
+    final TextEditingController dateController =
+        TextEditingController(text: project['project_date']);
+    final TextEditingController r1Controller =
+        TextEditingController(text: project['project_review1']);
+    final TextEditingController r2Controller =
+        TextEditingController(text: project['project_review2']);
+    final TextEditingController r3Controller =
+        TextEditingController(text: project['project_review3']);
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Edit Project Dates'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _buildDateField("Project Date", dateController, context),
+            _buildDateField("Review 1", r1Controller, context),
+            _buildDateField("Review 2", r2Controller, context),
+            _buildDateField("Review 3", r3Controller, context),
+          ],
+        ),
+        actions: [
+          TextButton(
+              onPressed: () => Navigator.pop(context), child: Text('Cancel')),
+          ElevatedButton(
+            onPressed: () async {
+              await supabase.from('tbl_project').update({
+                'project_date': dateController.text,
+                'project_review1': r1Controller.text,
+                'project_review2': r2Controller.text,
+                'project_review3': r3Controller.text,
+              }).eq('project_id', project['project_id']);
+              Navigator.pop(context);
+              fetchProjectdata(); // Refresh table
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text("Project updated")),
+              );
+              fetchProjectdata();
+            },
+            child: Text("Save"),
+          )
+        ],
+      ),
+    );
+  }
 
   Future<void> insertProjectdetails() async {
     try {
@@ -55,6 +105,7 @@ class _ProjectScreenState extends State<ProjectScreen>
       }
 
       print("Project data inserted");
+      fetchProjectdata();
     } catch (e) {
       print("ERROR INSERTING PROJECT DETAILS:$e");
     }
@@ -62,9 +113,9 @@ class _ProjectScreenState extends State<ProjectScreen>
 
   Future<void> fetchProjectdata() async {
     try {
-      final reponse = await supabase.from('tbl_project').select();
+      final response = await supabase.from('tbl_project').select();
       setState(() {
-        _projectdataList = reponse;
+        _projectdataList = response;
       });
     } catch (e) {
       print("ERROR FETCHING PROJECT DATA:$e");
@@ -88,7 +139,6 @@ class _ProjectScreenState extends State<ProjectScreen>
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     fetchProjectdata();
   }
@@ -131,7 +181,7 @@ class _ProjectScreenState extends State<ProjectScreen>
                   });
                 },
                 label: Text(
-                  _isFormVisible ? "Cancel" : "Manage Project",
+                  _isFormVisible ? "Cancel" : "Create Project",
                   style: TextStyle(color: Colors.white),
                 ),
                 icon: Icon(
@@ -321,9 +371,12 @@ class _ProjectScreenState extends State<ProjectScreen>
                 DataColumn(label: Text("Review3 date")),
                 DataColumn(label: Text("Report")),
                 DataColumn(label: Text("Project status")),
+                status == 0
+                    ? DataColumn(label: Text("Button"))
+                    : DataColumn(label: Text("")),
               ],
               rows: _projectdataList.asMap().entries.map((entry) {
-                print(entry.value);
+                print("Data: ${entry.value}");
                 return DataRow(cells: [
                   DataCell(SizedBox(
                       width: 10,
@@ -338,14 +391,19 @@ class _ProjectScreenState extends State<ProjectScreen>
                       width: 85, child: Text(entry.value['project_review2']))),
                   DataCell(SizedBox(
                       width: 85, child: Text(entry.value['project_review3']))),
-                  DataCell(Container(
+                  DataCell(SizedBox(
                     width: 90, // Adjust button width
                     child: ElevatedButton(
                       onPressed: () {
-                        print("Report button pressed");
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => ReportPage()),
+                          MaterialPageRoute(
+                              builder: (context) => ReportPage(
+                                    id: entry.value['project_id'],
+                                    type: _projectdataList[entry.key]
+                                            ['project_type'] as String? ??
+                                        'unknown',
+                                  )),
                         );
                       },
                       style: ElevatedButton.styleFrom(
@@ -410,8 +468,25 @@ class _ProjectScreenState extends State<ProjectScreen>
                               ),
                             ),
                           )
-                        : Text("Finished"),
+                        : Text(
+                            "Finished",
+                            style: TextStyle(
+                              color: Colors.green,
+                              fontWeight:
+                                  FontWeight.bold, // Optional: make it bold
+                            ),
+                          ),
                   ),
+                  status == 0
+                      ? DataCell(
+                          IconButton(
+                            icon: Icon(Icons.edit, color: Colors.orange),
+                            onPressed: () {
+                              _showEditDialog(entry.value); // Pass project row
+                            },
+                          ),
+                        )
+                      : DataCell(Text("")),
                 ]);
               }).toList(),
             ),
@@ -420,4 +495,31 @@ class _ProjectScreenState extends State<ProjectScreen>
       ),
     );
   }
+}
+
+Widget _buildDateField(
+    String label, TextEditingController controller, BuildContext context) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(vertical: 6),
+    child: TextFormField(
+      readOnly: true,
+      controller: controller,
+      onTap: () async {
+        final DateTime? picked = await showDatePicker(
+          context: context,
+          initialDate: DateTime.now(),
+          firstDate: DateTime(2000),
+          lastDate: DateTime(2101),
+        );
+        if (picked != null) {
+          controller.text = "${picked.day}/${picked.month}/${picked.year}";
+        }
+      },
+      decoration: InputDecoration(
+        labelText: label,
+        border: OutlineInputBorder(),
+        suffixIcon: Icon(Icons.date_range),
+      ),
+    ),
+  );
 }

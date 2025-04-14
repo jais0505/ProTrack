@@ -13,6 +13,9 @@ class _YearScreenState extends State<YearScreen>
   bool _isFormVisible = false;
   final Duration _animationDuration = const Duration(milliseconds: 300);
   final TextEditingController yearController = TextEditingController();
+  TextEditingController editYearController = TextEditingController();
+  int? _editingYearId;
+
   List<Map<String, dynamic>> _year = [];
   @override
   void initState() {
@@ -72,6 +75,55 @@ class _YearScreenState extends State<YearScreen>
     } catch (e) {
       print("ERROR DELETING YEAR:$e");
     }
+  }
+
+  Future<void> updateYear(int yearId) async {
+    try {
+      await supabase.from('tbl_year').update({
+        'year_name': editYearController.text,
+      }).eq('year_id', yearId);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Year updated', style: TextStyle(color: Colors.white)),
+          backgroundColor: Colors.blue,
+        ),
+      );
+
+      fetchYear();
+      Navigator.of(context).pop(); // Close dialog
+    } catch (e) {
+      print("Error updating year: $e");
+    }
+  }
+
+  void showEditDialog(String currentYear, int yearId) {
+    editYearController.text = currentYear;
+    _editingYearId = yearId;
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text("Edit Year"),
+        content: TextFormField(
+          controller: editYearController,
+          decoration: InputDecoration(
+            hintText: 'Enter new year name',
+            border: OutlineInputBorder(),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text("Cancel"),
+          ),
+          ElevatedButton(
+            onPressed: () => updateYear(yearId),
+            child: Text("Update"),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -201,6 +253,12 @@ class _YearScreenState extends State<YearScreen>
                                     fontWeight: FontWeight.bold,
                                   ))),
                           DataColumn(
+                              label: Text("Edit",
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ))),
+                          DataColumn(
                               label: Text("Delete",
                                   style: TextStyle(
                                     fontSize: 16,
@@ -214,6 +272,17 @@ class _YearScreenState extends State<YearScreen>
                               (entry.key + 1).toString(),
                             )),
                             DataCell(Text(entry.value['year_name'])),
+                            DataCell(Row(
+                              children: [
+                                IconButton(
+                                  icon: Icon(Icons.edit, color: Colors.orange),
+                                  onPressed: () {
+                                    showEditDialog(entry.value['year_name'],
+                                        entry.value['year_id']);
+                                  },
+                                ),
+                              ],
+                            )),
                             DataCell(
                               IconButton(
                                 onPressed: () {

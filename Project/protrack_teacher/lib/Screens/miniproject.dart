@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:protrack_teacher/Screens/creategroup.dart';
+import 'package:protrack_teacher/Screens/minireport.dart';
 import 'package:protrack_teacher/Screens/viewgroups.dart';
 import 'package:protrack_teacher/main.dart';
 
@@ -138,7 +139,7 @@ class _MiniprojectState extends State<Miniproject> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) => Viewgroups(
-                                      pid: widget.pid,
+                                      pid: data['project_id'],
                                     )));
                       },
                       child: Text(
@@ -148,6 +149,45 @@ class _MiniprojectState extends State<Miniproject> {
                             fontWeight: FontWeight.bold,
                             fontSize: 18),
                       )),
+                ],
+              ),
+            ),
+          ),
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.only(left: 25, right: 22, top: 25),
+              child: Row(
+                children: [
+                  ElevatedButton.icon(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green,
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5)),
+                    ),
+                    onPressed: () {
+                      print(data['project_id']);
+                      // Navigator.push(
+                      //   context,
+                      //   MaterialPageRoute(
+                      //     builder: (context) => MiniReprotPage(
+                      //       id: data['project_id'],
+                      //     ),
+                      //   ),
+                      // );
+                    },
+                    icon: Icon(Icons.summarize_outlined,
+                        size: 22, color: Colors.white), // 📄 Report icon
+                    label: Text(
+                      'View Report',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                      ),
+                    ),
+                  )
                 ],
               ),
             ),

@@ -203,6 +203,12 @@ class _AddstudentsScreenState extends State<AddstudentsScreen> {
             padding: const EdgeInsets.all(20.0),
             child: TextFormField(
               controller: _emailEditingControllor,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'please enter Email';
+                }
+                return null;
+              },
               decoration: InputDecoration(
                   hintText: 'Enter student email',
                   border: OutlineInputBorder(),
@@ -213,6 +219,12 @@ class _AddstudentsScreenState extends State<AddstudentsScreen> {
             padding: const EdgeInsets.all(20.0),
             child: TextFormField(
               controller: _passwordEditingController,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'please enter password';
+                }
+                return null;
+              },
               decoration: InputDecoration(
                   hintText: 'Enter student password',
                   border: OutlineInputBorder(),

@@ -14,11 +14,12 @@ class _ViewgroupsState extends State<Viewgroups> {
   List<Map<String, dynamic>> _groupList = [];
   Future<void> fetchgroups() async {
     try {
+      print("Fetching groups for project ID: ${widget.pid}");
       final response = await supabase
           .from('tbl_group')
           .select(" *, tbl_groupmember(*, tbl_student(*))")
           .eq('project_id', widget.pid);
-      print(response);
+      print("Response: $response");
       setState(() {
         _groupList = response;
       });
