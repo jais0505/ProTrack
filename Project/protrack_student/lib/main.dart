@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:protrack_student/screens/dashboard.dart';
 
 import 'package:protrack_student/screens/newlogin.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -20,6 +21,23 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-        debugShowCheckedModeBanner: false, home: NewLoginPage());
+        debugShowCheckedModeBanner: false, home: AuthWrapper());
+  }
+}
+
+class AuthWrapper extends StatelessWidget {
+  const AuthWrapper({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    // Check if the user is logged in
+    final session = supabase.auth.currentSession;
+
+    // Navigate to the appropriate screen based on the authentication state
+    if (session != null) {
+      return HomePage(); // Replace with your home screen widget
+    } else {
+      return NewLoginPage(); // Replace with your auth page widget
+    }
   }
 }

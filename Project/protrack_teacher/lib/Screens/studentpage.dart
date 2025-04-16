@@ -1,10 +1,8 @@
 import 'dart:io';
-import 'package:flutter_launcher_icons/android.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:protrack_teacher/Screens/certificateverification.dart';
 import 'package:protrack_teacher/Screens/mainreviewproject.dart';
 import 'package:protrack_teacher/main.dart';
 
@@ -115,7 +113,7 @@ class _StudentPageState extends State<StudentPage> {
 
   Future<void> completeProject() async {
     try {
-      final response = await supabase
+      await supabase
           .from('tbl_mainproject')
           .update({'mainproject_status': 11}).eq('mainproject_id', mid!);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -222,7 +220,7 @@ class _StudentPageState extends State<StudentPage> {
                                 ),
                               ),
                               Text(
-                                (projectTitle == null || projectTitle.isEmpty)
+                                (projectTitle.isEmpty)
                                     ? "N/A"
                                     : "${projectTitle}",
                                 style: TextStyle(
@@ -248,9 +246,7 @@ class _StudentPageState extends State<StudentPage> {
                                 ),
                               ),
                               Text(
-                                (technology == null || technology.isEmpty)
-                                    ? "N/A"
-                                    : "${technology}",
+                                (technology.isEmpty) ? "N/A" : "${technology}",
                                 style: TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold,
@@ -274,7 +270,7 @@ class _StudentPageState extends State<StudentPage> {
                                 ),
                               ),
                               Text(
-                                (projectCenter == null || projectCenter.isEmpty)
+                                (projectCenter.isEmpty)
                                     ? "N/A"
                                     : "${projectCenter}",
                                 style: TextStyle(

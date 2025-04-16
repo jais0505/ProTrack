@@ -21,6 +21,7 @@ class _MiniprojectState extends State<Miniproject> {
           .from('tbl_project')
           .select()
           .eq('project_type', 'Mini Project')
+          .eq('project_status', 0)
           .single();
       if (response.isNotEmpty) {
         setState(() {
@@ -168,14 +169,14 @@ class _MiniprojectState extends State<Miniproject> {
                     ),
                     onPressed: () {
                       print(data['project_id']);
-                      // Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(
-                      //     builder: (context) => MiniReprotPage(
-                      //       id: data['project_id'],
-                      //     ),
-                      //   ),
-                      // );
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => MiniReprotPage(
+                            id: data['project_id'],
+                          ),
+                        ),
+                      );
                     },
                     icon: Icon(Icons.summarize_outlined,
                         size: 22, color: Colors.white), // 📄 Report icon

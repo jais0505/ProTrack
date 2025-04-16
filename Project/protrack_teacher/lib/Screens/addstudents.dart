@@ -154,81 +154,116 @@ class _AddstudentsScreenState extends State<AddstudentsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
-      body: ListView(
-        children: [
-          Form(
-            key: formKey,
-            child: Center(
-              child: Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Text(
-                  "Add Student Form",
-                  style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+      appBar: AppBar(
+        backgroundColor: const Color(0xFF004A61),
+        title: const Text(
+          'Add Students',
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        elevation: 0,
+      ),
+      body: Form(
+        key: formKey,
+        child: ListView(
+          children: [
+            const SizedBox(
+              height: 20,
+            ),
+            Center(
+              child: GestureDetector(
+                onTap: _pickImage,
+                child: CircleAvatar(
+                  radius: 50,
+                  backgroundColor: const Color(0xFF004A61), // Primary color
+                  backgroundImage: _image != null ? FileImage(_image!) : null,
+                  child: _image == null
+                      ? const Icon(Icons.camera_alt,
+                          color: Colors.white, size: 50)
+                      : null,
                 ),
               ),
             ),
-          ),
-          Center(
-            child: GestureDetector(
-              onTap: _pickImage,
-              child: CircleAvatar(
-                radius: 50,
-                backgroundColor: Colors.white38,
-                backgroundImage: _image != null ? FileImage(_image!) : null,
-                child: _image == null
-                    ? const Icon(Icons.camera_alt,
-                        color: Colors.black, size: 50)
-                    : null,
+            Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: TextFormField(
+                controller: studentnameControllor,
+                validator: (value) {
+                  if (value == null || value.trim().isEmpty) {
+                    return "Please enter name";
+                  }
+                  if (!RegExp(r'^[a-zA-Z ]+$').hasMatch(value.trim())) {
+                    return "Name must contain only letters";
+                  }
+                  return null;
+                },
+                keyboardType: TextInputType.name,
+                decoration: InputDecoration(
+                  hintText: 'Enter student name',
+                  border: OutlineInputBorder(
+                    borderSide: const BorderSide(color: Color(0xFF004A61)),
+                  ),
+                  prefixIcon:
+                      const Icon(Icons.person, color: Color(0xFF004A61)),
+                  focusedBorder: const OutlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFF004A61), width: 2),
+                  ),
+                ),
               ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: TextFormField(
-              controller: studentnameControllor,
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return "Please enter name";
-                }
-                return null;
-              },
-              decoration: InputDecoration(
-                  hintText: 'Enter student name',
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.person)),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: TextFormField(
-              controller: _emailEditingControllor,
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'please enter Email';
-                }
-                return null;
-              },
-              decoration: InputDecoration(
+            Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: TextFormField(
+                controller: _emailEditingControllor,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter Email';
+                  }
+                  if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
+                      .hasMatch(value)) {
+                    return 'Enter a valid email';
+                  }
+                  return null;
+                },
+                keyboardType: TextInputType.emailAddress,
+                decoration: InputDecoration(
                   hintText: 'Enter student email',
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.email)),
+                  border: OutlineInputBorder(
+                    borderSide: const BorderSide(color: Color(0xFF004A61)),
+                  ),
+                  prefixIcon: const Icon(Icons.email, color: Color(0xFF004A61)),
+                  focusedBorder: const OutlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFF004A61), width: 2),
+                  ),
+                ),
+              ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: TextFormField(
-              controller: _passwordEditingController,
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'please enter password';
-                }
-                return null;
-              },
-              decoration: InputDecoration(
+            Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: TextFormField(
+                controller: _passwordEditingController,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter password';
+                  }
+                  if (value.length < 6) {
+                    return 'Password must be at least 6 characters';
+                  }
+                  return null;
+                },
+                keyboardType: TextInputType.visiblePassword,
+                decoration: InputDecoration(
                   hintText: 'Enter student password',
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.password),
+                  border: OutlineInputBorder(
+                    borderSide: const BorderSide(color: Color(0xFF004A61)),
+                  ),
+                  prefixIcon:
+                      const Icon(Icons.password, color: Color(0xFF004A61)),
+                  focusedBorder: const OutlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFF004A61), width: 2),
+                  ),
                   suffixIcon: IconButton(
                     onPressed: () {
                       setState(() {
@@ -237,18 +272,35 @@ class _AddstudentsScreenState extends State<AddstudentsScreen> {
                     },
                     icon:
                         Icon(passkey ? Icons.visibility_off : Icons.visibility),
-                  )),
-              obscureText: passkey,
+                  ),
+                ),
+                obscureText: passkey,
+              ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: TextFormField(
-              controller: _repassEditingController,
-              decoration: InputDecoration(
+            Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: TextFormField(
+                controller: _repassEditingController,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please re-enter password';
+                  }
+                  if (value != _passwordEditingController.text) {
+                    return 'Passwords do not match';
+                  }
+                  return null;
+                },
+                keyboardType: TextInputType.visiblePassword,
+                decoration: InputDecoration(
                   hintText: 'Re-enter password',
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.password),
+                  border: OutlineInputBorder(
+                    borderSide: const BorderSide(color: Color(0xFF004A61)),
+                  ),
+                  prefixIcon:
+                      const Icon(Icons.password, color: Color(0xFF004A61)),
+                  focusedBorder: const OutlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFF004A61), width: 2),
+                  ),
                   suffixIcon: IconButton(
                     onPressed: () {
                       setState(() {
@@ -257,60 +309,96 @@ class _AddstudentsScreenState extends State<AddstudentsScreen> {
                     },
                     icon: Icon(
                         repasskey ? Icons.visibility_off : Icons.visibility),
-                  )),
-              obscureText: repasskey,
+                  ),
+                ),
+                obscureText: repasskey,
+              ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: TextFormField(
-              controller: studentcontactControllor,
-              decoration: InputDecoration(
-                  hintText: 'Enter student contact',
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.phone)),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: DropdownButtonFormField<String>(
-              decoration: InputDecoration(border: OutlineInputBorder()),
-              value: selectedYear,
-              hint: const Text("Select Year"),
-              onChanged: (newValue) {
-                setState(() {
-                  selectedYear = newValue;
-                });
-              },
-              items: _yearList.map((year) {
-                return DropdownMenuItem<String>(
-                  value: year['year_id'].toString(),
-                  child: Text(year['year_name']),
-                );
-              }).toList(),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 80, right: 80, top: 10),
-            child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFF017AFF),
-                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 18),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5))),
-                onPressed: () {
-                  print("Click triggered");
-                  register();
+            Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: TextFormField(
+                controller: studentcontactControllor,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter contact number';
+                  }
+                  if (!RegExp(r'^\d{10}$').hasMatch(value)) {
+                    return 'Enter a valid 10-digit number';
+                  }
+                  return null;
                 },
-                child: Text(
+                keyboardType: TextInputType.phone,
+                decoration: InputDecoration(
+                  hintText: 'Enter student contact',
+                  border: OutlineInputBorder(
+                    borderSide: const BorderSide(color: Color(0xFF004A61)),
+                  ),
+                  prefixIcon: const Icon(Icons.phone, color: Color(0xFF004A61)),
+                  focusedBorder: const OutlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFF004A61), width: 2),
+                  ),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: DropdownButtonFormField<String>(
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                    borderSide: const BorderSide(color: Color(0xFF004A61)),
+                  ),
+                  focusedBorder: const OutlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFF004A61), width: 2),
+                  ),
+                ),
+                value: selectedYear,
+                hint: const Text("Select Year"),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return "Please select a year";
+                  }
+                  return null;
+                },
+                onChanged: (newValue) {
+                  setState(() {
+                    selectedYear = newValue;
+                  });
+                },
+                items: _yearList.map((year) {
+                  return DropdownMenuItem<String>(
+                    value: year['year_id'].toString(),
+                    child: Text(year['year_name']),
+                  );
+                }).toList(),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 80, right: 80, top: 10),
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF004A61), // Primary color
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                ),
+                onPressed: () {
+                  if (formKey.currentState!.validate()) {
+                    register();
+                  }
+                },
+                child: const Text(
                   'Add',
                   style: TextStyle(color: Colors.white),
-                )),
-          ),
-          SizedBox(
-            height: 50,
-          )
-        ],
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 50,
+            )
+          ],
+        ),
       ),
     );
   }

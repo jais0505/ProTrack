@@ -37,60 +37,6 @@ class _StudentProfileState extends State<StudentProfile> {
                           fontWeight: FontWeight.bold,
                           color: Color(0xFF004A61)),
                     ),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        // Navigator.push(
-                        //     context,
-                        //     MaterialPageRoute(
-                        //         builder: (context) => ));
-                      },
-                      child: Container(
-                        width: 350,
-                        height: 100,
-                        decoration: BoxDecoration(
-                            color: Color(0xFF004A61),
-                            borderRadius: BorderRadius.circular(10)),
-                        child: Center(
-                          child: Text(
-                            "Mini Project",
-                            style: TextStyle(
-                                fontSize: 25,
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        // Navigator.push(
-                        //     context,
-                        //     MaterialPageRoute(
-                        //         builder: (context) => Mainproject()));
-                      },
-                      child: Container(
-                        width: 350,
-                        height: 100,
-                        decoration: BoxDecoration(
-                            color: Color(0xFF004A61),
-                            borderRadius: BorderRadius.circular(10)),
-                        child: Center(
-                          child: Text(
-                            "Main Project",
-                            style: TextStyle(
-                                fontSize: 25,
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                      ),
-                    )
                   ],
                 ),
               ),

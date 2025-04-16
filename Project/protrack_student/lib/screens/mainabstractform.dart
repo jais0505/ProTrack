@@ -33,6 +33,7 @@ class _MainAbstractState extends State<MainAbstract> {
       String projectCenter = _projectCenterController.text;
       String? tech = selectedTech;
       print("Title:$projectTitle Center:$projectCenter Tech:$tech Url:$url");
+      print('pid:${widget.pid}');
       await supabase.from('tbl_mainproject').insert({
         'mainproject_abstract': url,
         'mainproject_title': projectTitle,
@@ -41,6 +42,7 @@ class _MainAbstractState extends State<MainAbstract> {
         'mainproject_status': 1,
         'project_id': widget.pid
       });
+
       _projectCenterController.clear;
       _projectTitleController.clear;
       setState(() {

@@ -24,7 +24,7 @@ class _LoginScreenState extends State<LoginScreen> {
       Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => Dashboard(),
+            builder: (context) => HomePage(),
           ));
     } catch (e) {
       print("Error occur in login:$e");

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:protrack_teacher/Screens/homepage.dart';
 import 'package:protrack_teacher/Screens/managestudents.dart';
 import 'package:protrack_teacher/Screens/myaccount.dart';
-import 'package:protrack_teacher/Screens/viewprojects.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({super.key});
@@ -12,13 +11,8 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
-  int _selectedIndex = 0;
-  final List<Widget> items = [
-    HomeScreen(),
-    Account(),
-    ViewProjects(),
-    ManagestudentsScreen()
-  ];
+  int _selectedIndex = 1;
+  final List<Widget> items = [Account(), HomeScreen(), ManagestudentsScreen()];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,11 +30,9 @@ class _DashboardState extends State<Dashboard> {
             });
           },
           items: [
-            BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
             BottomNavigationBarItem(
                 icon: Icon(Icons.account_circle), label: 'Profile'),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.computer_rounded), label: 'Project'),
+            BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
             BottomNavigationBarItem(
                 icon: Icon(Icons.group), label: 'Manage Student'),
           ]),
