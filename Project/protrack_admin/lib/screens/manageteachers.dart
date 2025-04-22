@@ -35,6 +35,21 @@ class _TeacherScreenState extends State<TeacherScreen>
 
   PlatformFile? pickedImage;
 
+  final _formKey = GlobalKey<FormState>();
+  String? _formError;
+
+  // Email validation
+  bool _isValidEmail(String email) {
+    final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+    return emailRegex.hasMatch(email);
+  }
+
+  // Contact validation (10 digits)
+  bool _isValidContact(String contact) {
+    final contactRegex = RegExp(r'^\d{10}$');
+    return contactRegex.hasMatch(contact);
+  }
+
   // Handle File Upload Process
   Future<void> handleImagePick() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
@@ -48,27 +63,37 @@ class _TeacherScreenState extends State<TeacherScreen>
   }
 
   Future<void> register() async {
+    setState(() {
+      _formError = null;
+    });
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
+    if (pickedImage == null) {
+      setState(() {
+        _formError = "Please select a profile photo.";
+      });
+      return;
+    }
+    if (_passwordEditingController.text != _repasswordEditingController.text) {
+      setState(() {
+        _formError = "Passwords do not match.";
+      });
+      return;
+    }
+    await _registerTeacher();
+  }
+
+  Future<void> _registerTeacher() async {
     try {
-      if (_passwordEditingController.text ==
-          _repasswordEditingController.text) {
-        final auth = await supabase.auth.signUp(
-            password: _passwordEditingController.text,
-            email: _emailEditingController.text);
-        final uid = auth.user!.id;
-        if (uid.isNotEmpty || uid != "") {
-          storeData(uid);
-        } else {
-          CherryToast.error(
-                  description: Text("password and re-entered password mismatch",
-                      style: TextStyle(color: Colors.black)),
-                  animationType: AnimationType.fromRight,
-                  animationDuration: Duration(milliseconds: 1000),
-                  autoDismiss: true)
-              .show(context);
-          print("Password and re-entered password not same");
-        }
+      final auth = await supabase.auth.signUp(
+          password: _passwordEditingController.text,
+          email: _emailEditingController.text);
+      final uid = auth.user!.id;
+      if (uid.isNotEmpty) {
+        await storeData(uid);
+        FetchTeachers();
       }
-      FetchTeachers();
     } catch (e) {
       print("Authentication Error: $e");
     }
@@ -186,6 +211,7 @@ class _TeacherScreenState extends State<TeacherScreen>
             curve: Curves.easeInOut,
             child: _isFormVisible
                 ? Form(
+                    key: _formKey,
                     child: Container(
                       height: 500,
                       width: 400,
@@ -212,6 +238,15 @@ class _TeacherScreenState extends State<TeacherScreen>
                                     fontSize: 16, fontWeight: FontWeight.bold),
                               ),
                             ),
+                            if (_formError != null)
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 8),
+                                child: Text(
+                                  _formError!,
+                                  style: TextStyle(
+                                      color: Colors.red, fontSize: 13),
+                                ),
+                              ),
                             SizedBox(
                               height: 120,
                               width: 120,
@@ -253,6 +288,23 @@ class _TeacherScreenState extends State<TeacherScreen>
                                   border: OutlineInputBorder(),
                                   prefixIcon: Icon(Icons.person),
                                 ),
+                                validator: (value) {
+                                  if (value == null || value.trim().isEmpty) {
+                                    return 'Please enter teacher name';
+                                  }
+                                  // Require at least two words (first and last name)
+                                  final parts =
+                                      value.trim().split(RegExp(r'\s+'));
+                                  if (parts.length < 2) {
+                                    return 'Please enter full name (first and last name)';
+                                  }
+                                  // Only allow letters and spaces
+                                  if (!RegExp(r'^[a-zA-Z\s]+$')
+                                      .hasMatch(value.trim())) {
+                                    return 'Name can only contain letters and spaces';
+                                  }
+                                  return null;
+                                },
                               ),
                             ),
                             Padding(
@@ -265,6 +317,15 @@ class _TeacherScreenState extends State<TeacherScreen>
                                   border: OutlineInputBorder(),
                                   prefixIcon: Icon(Icons.email),
                                 ),
+                                validator: (value) {
+                                  if (value == null || value.trim().isEmpty) {
+                                    return 'Please enter email';
+                                  }
+                                  if (!_isValidEmail(value.trim())) {
+                                    return 'Enter a valid email address';
+                                  }
+                                  return null;
+                                },
                               ),
                             ),
                             Padding(
@@ -278,6 +339,15 @@ class _TeacherScreenState extends State<TeacherScreen>
                                   prefixIcon:
                                       Icon(Icons.contact_phone_outlined),
                                 ),
+                                validator: (value) {
+                                  if (value == null || value.trim().isEmpty) {
+                                    return 'Please enter contact number';
+                                  }
+                                  if (!_isValidContact(value.trim())) {
+                                    return 'Enter a valid 10-digit contact number';
+                                  }
+                                  return null;
+                                },
                               ),
                             ),
                             Padding(
@@ -301,6 +371,15 @@ class _TeacherScreenState extends State<TeacherScreen>
                                   ),
                                 ),
                                 obscureText: passkey,
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Please enter password';
+                                  }
+                                  if (value.length < 6) {
+                                    return 'Password must be at least 6 characters';
+                                  }
+                                  return null;
+                                },
                               ),
                             ),
                             Padding(
@@ -315,15 +394,25 @@ class _TeacherScreenState extends State<TeacherScreen>
                                   suffixIcon: IconButton(
                                     onPressed: () {
                                       setState(() {
-                                        passkey = !passkey;
+                                        repasskey = !repasskey;
                                       });
                                     },
-                                    icon: Icon(passkey
+                                    icon: Icon(repasskey
                                         ? Icons.visibility_off
                                         : Icons.visibility),
                                   ),
                                 ),
-                                obscureText: passkey,
+                                obscureText: repasskey,
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Please re-enter password';
+                                  }
+                                  if (value !=
+                                      _passwordEditingController.text) {
+                                    return 'Passwords do not match';
+                                  }
+                                  return null;
+                                },
                               ),
                             ),
                             Padding(

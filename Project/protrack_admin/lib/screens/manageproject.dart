@@ -27,6 +27,25 @@ class _ProjectScreenState extends State<ProjectScreen>
 
   List<Map<String, dynamic>> _projectdataList = [];
 
+  final _formKey = GlobalKey<FormState>(); // Add form key
+
+  String? _formError; // For custom validation errors
+
+  // Helper to parse dd/MM/yyyy to DateTime
+  DateTime? _parseDate(String value) {
+    try {
+      final parts = value.split('/');
+      if (parts.length != 3) return null;
+      return DateTime(
+        int.parse(parts[2]),
+        int.parse(parts[1]),
+        int.parse(parts[0]),
+      );
+    } catch (_) {
+      return null;
+    }
+  }
+
   void _showEditDialog(Map<String, dynamic> project) {
     final TextEditingController dateController =
         TextEditingController(text: project['project_date']);
@@ -127,6 +146,7 @@ class _ProjectScreenState extends State<ProjectScreen>
       await supabase
           .from('tbl_project')
           .update({'project_status': 1}).eq("project_id", id);
+      fetchProjectdata();
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text(
           "Project finished",
@@ -134,7 +154,9 @@ class _ProjectScreenState extends State<ProjectScreen>
         ),
         backgroundColor: Colors.green,
       ));
-    } catch (e) {}
+    } catch (e) {
+      print("ERROR UPDATING PROJECT STATUS FINISH:$e");
+    }
   }
 
   @override
@@ -196,6 +218,7 @@ class _ProjectScreenState extends State<ProjectScreen>
             curve: Curves.easeInOut,
             child: _isFormVisible
                 ? Form(
+                    key: _formKey, // Assign form key
                     child: Container(
                       height: 500,
                       width: 500,
@@ -230,9 +253,7 @@ class _ProjectScreenState extends State<ProjectScreen>
                                         "Project Type",
                                         style: TextStyle(fontSize: 16),
                                       ),
-                                      SizedBox(
-                                        width: 5,
-                                      ),
+                                      SizedBox(width: 5),
                                       Radio(
                                         value: 'Mini Project',
                                         groupValue: _type,
@@ -246,9 +267,7 @@ class _ProjectScreenState extends State<ProjectScreen>
                                         'Mini Project',
                                         style: TextStyle(fontSize: 16),
                                       ),
-                                      SizedBox(
-                                        width: 5,
-                                      ),
+                                      SizedBox(width: 5),
                                       Radio(
                                         value: 'Main Project',
                                         groupValue: _type,
@@ -264,12 +283,21 @@ class _ProjectScreenState extends State<ProjectScreen>
                                       ),
                                     ],
                                   ),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
+                                  if (_formError != null)
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 4),
+                                      child: Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: Text(
+                                          _formError!,
+                                          style: TextStyle(
+                                              color: Colors.red, fontSize: 12),
+                                        ),
+                                      ),
+                                    ),
+                                  SizedBox(height: 10),
                                   TextFormField(
-                                    readOnly:
-                                        true, // Makes the field non-editable directly
+                                    readOnly: true,
                                     onTap: () => _selectDate(
                                         context, projectdateController),
                                     controller: projectdateController,
@@ -278,13 +306,16 @@ class _ProjectScreenState extends State<ProjectScreen>
                                       border: OutlineInputBorder(),
                                       prefixIcon: Icon(Icons.date_range),
                                     ),
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return 'Please select project date';
+                                      }
+                                      return null;
+                                    },
                                   ),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
+                                  SizedBox(height: 10),
                                   TextFormField(
-                                    readOnly:
-                                        true, // Makes the field non-editable directly
+                                    readOnly: true,
                                     onTap: () => _selectDate(
                                         context, projectreview1Controller),
                                     controller: projectreview1Controller,
@@ -293,13 +324,16 @@ class _ProjectScreenState extends State<ProjectScreen>
                                       border: OutlineInputBorder(),
                                       prefixIcon: Icon(Icons.date_range),
                                     ),
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return 'Please select review 1 date';
+                                      }
+                                      return null;
+                                    },
                                   ),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
+                                  SizedBox(height: 10),
                                   TextFormField(
-                                    readOnly:
-                                        true, // Makes the field non-editable directly
+                                    readOnly: true,
                                     onTap: () => _selectDate(
                                         context, projectreview2Controller),
                                     controller: projectreview2Controller,
@@ -308,13 +342,16 @@ class _ProjectScreenState extends State<ProjectScreen>
                                       border: OutlineInputBorder(),
                                       prefixIcon: Icon(Icons.date_range),
                                     ),
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return 'Please select review 2 date';
+                                      }
+                                      return null;
+                                    },
                                   ),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
+                                  SizedBox(height: 10),
                                   TextFormField(
-                                    readOnly:
-                                        true, // Makes the field non-editable directly
+                                    readOnly: true,
                                     onTap: () => _selectDate(
                                         context, projectreview3Controller),
                                     controller: projectreview3Controller,
@@ -323,6 +360,12 @@ class _ProjectScreenState extends State<ProjectScreen>
                                       border: OutlineInputBorder(),
                                       prefixIcon: Icon(Icons.date_range),
                                     ),
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return 'Please select review 3 date';
+                                      }
+                                      return null;
+                                    },
                                   ),
                                 ],
                               ),
@@ -339,6 +382,75 @@ class _ProjectScreenState extends State<ProjectScreen>
                                         borderRadius:
                                             BorderRadius.circular(5))),
                                 onPressed: () {
+                                  setState(() {
+                                    _formError = null;
+                                  });
+                                  // Validate form fields
+                                  if (!_formKey.currentState!.validate()) {
+                                    return;
+                                  }
+                                  // Validate project type
+                                  if (_type == null || _type!.isEmpty) {
+                                    setState(() {
+                                      _formError =
+                                          "Please select a project type";
+                                    });
+                                    return;
+                                  }
+                                  // Parse dates
+                                  final d0 =
+                                      _parseDate(projectdateController.text);
+                                  final d1 =
+                                      _parseDate(projectreview1Controller.text);
+                                  final d2 =
+                                      _parseDate(projectreview2Controller.text);
+                                  final d3 =
+                                      _parseDate(projectreview3Controller.text);
+
+                                  // Check for nulls (shouldn't happen due to validators)
+                                  if (d0 == null ||
+                                      d1 == null ||
+                                      d2 == null ||
+                                      d3 == null) {
+                                    setState(() {
+                                      _formError = "Invalid date format.";
+                                    });
+                                    return;
+                                  }
+
+                                  // Dates must be unique
+                                  final dateSet = {d0, d1, d2, d3};
+                                  if (dateSet.length != 4) {
+                                    setState(() {
+                                      _formError =
+                                          "All dates must be different.";
+                                    });
+                                    return;
+                                  }
+
+                                  // Review 1 > Project, Review 2 > Review 1, Review 3 > Review 2
+                                  if (!(d1.isAfter(d0))) {
+                                    setState(() {
+                                      _formError =
+                                          "Review 1 date must be after project date.";
+                                    });
+                                    return;
+                                  }
+                                  if (!(d2.isAfter(d1))) {
+                                    setState(() {
+                                      _formError =
+                                          "Review 2 date must be after review 1 date.";
+                                    });
+                                    return;
+                                  }
+                                  if (!(d3.isAfter(d2))) {
+                                    setState(() {
+                                      _formError =
+                                          "Review 3 date must be after review 2 date.";
+                                    });
+                                    return;
+                                  }
+
                                   insertProjectdetails();
                                 },
                                 child: Text(
